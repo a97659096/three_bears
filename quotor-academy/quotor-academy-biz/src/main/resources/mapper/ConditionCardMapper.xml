@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quotorcloud.quotor.academy.mapper.ConditionCardMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quotorcloud.quotor.academy.api.vo.ConditionCardVO">
+        <id column="c_id" property="cId" />
+        <result column="c_template_type" property="cTemplateType" />
+        <result column="c_name" property="cName" />
+        <result column="c_shop_id" property="cShopId" />
+        <result column="c_shop_name" property="cShopName" />
+        <result column="c_price" property="cPrice" />
+        <result column="c_denomination" property="cDenomination" />
+        <result column="c_start_date_type" property="cStartDateType" />
+        <result column="c_start_date" property="cStartDate" />
+        <result column="c_end_date_type" property="cEndDateType" />
+        <result column="c_end_date" property="cEndDate" />
+        <result column="c_category_id" property="cCategoryId" />
+        <result column="c_category_name" property="cCategoryName" />
+        <result column="c_sell_notice" property="cSellNotice" />
+        <result column="c_state" property="cState" />
+        <result column="c_use_way" property="cUseWay" />
+        <result column="c_property" property="cProperty" />
+        <result column="c_limit_buy" property="cLimitBuy" />
+        <result column="c_limit_buy_count" property="cLimitBuyCount" />
+        <collection property="conditionCardDetails" resultMap="BaseResultMapChildren">
+        </collection>
+    </resultMap>
+    <resultMap id="BaseResultMapChildren" type="com.quotorcloud.quotor.academy.api.entity.ConditionCardDetail">
+        <result column="cd_id" property="cdId" />
+        <result column="cd_card_id" property="cdCardId" />
+        <result column="cd_detail_type" property="cdDetailType" />
+        <result column="cd_content_id" property="cdContentId" />
+        <result column="cd_name" property="cdName" />
+        <result column="cd_price" property="cdPrice" />
+        <result column="cd_count" property="cdCount" />
+        <result column="cd_discount" property="cdDiscount" />
+        <result column="cd_give_money" property="cdGiveMoney" />
+        <result column="cd_reach_money" property="cdReachMoney" />
+        <result column="cd_gmt_create" property="cdGmtCreate" />
+        <result column="cd_gmt_modified" property="cdGmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        c_id, c_template_type, c_name, c_shop_id, c_shop_name, c_price, c_denomination, c_start_date_type, c_start_date, c_end_date_type, c_end_date, c_category_id, c_category_name, c_sell_notice, c_state, c_use_way, c_property, c_limit_buy, c_limit_buy_count, c_del_state, c_gmt_create, c_gmt_modified
+    </sql>
+    <sql id="Base_Column_List_CHILDREN">
+        cd_id, cd_card_id, cd_detail_type, cd_content_id, cd_name, cd_price, cd_count, cd_discount, cd_give_money, cd_reach_money, cd_gmt_create, cd_gmt_modified
+    </sql>
+    <select id="selectCardPage" resultType="com.quotorcloud.quotor.academy.api.vo.ConditionCardVO" resultMap="BaseResultMapChildren">
+        select
+        <include refid="Base_Column_List"></include>,
+        <include refid="Base_Column_List_CHILDREN"></include>
+        from bear_condition_card cc left join bear_condition_card_detail ccd
+        on cc.c_id = cd.card_id
+        <where>
+            c_del_state = 0
+            <if test="card.cShopId != null and card.cShopId != ''">
+                and c_shop_id = #{card.cShopId}
+            </if>
+            <if test="card.cState != null and card.cState != ''">
+                and c_state = #{card.cState}
+            </if>
+            <if test="card.cName != null and card.cName != ''">
+                and c_name like concat('%',#{card.cName},'%')
+            </if>
+            <if test="card.categoryIds != null and card.categoryIds != ''">
+                and c_category_id in
+                <foreach collection="card.categoryIds" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+</mapper>

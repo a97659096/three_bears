@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quotorcloud.quotor.academy.mapper.InviteJobMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quotorcloud.quotor.academy.api.entity.InviteJob">
+        <id column="ij_id" property="ijId" />
+        <result column="ij_position_name" property="ijPositionName" />
+        <result column="ij_phone" property="ijPhone" />
+        <result column="ij_welfare" property="ijWelfare" />
+        <result column="ij_salary" property="ijSalary" />
+        <result column="ij_address" property="ijAddress" />
+        <result column="ij_shop_id" property="ijShopId" />
+        <result column="ij_shop_name" property="ijShopName" />
+        <result column="ij_status" property="ijStatus" />
+        <result column="ij_position_detail" property="ijPositionDetail" />
+        <result column="ij_owner_detail" property="ijOwnerDetail" />
+        <result column="ij_start_date" property="ijStartDate" />
+        <result column="ij_end_date" property="ijEndDate" />
+        <result column="ij_issue_time" property="ijIssueTime" />
+        <result column="ij_type" property="ijType" />
+        <result column="ij_xdr_id" property="ijXdrId" />
+        <result column="ij_xdr_name" property="ijXdrName" />
+        <result column="ij_gmt_create" property="ijGmtCreate" />
+        <result column="ij_gmt_modified" property="ijGmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ij_id, ij_position_name, ij_phone, ij_welfare, ij_salary, ij_address, ij_shop_id, ij_shop_name, ij_status, ij_position_detail, ij_owner_detail, ij_start_date, ij_end_date, ij_issue_time, ij_type, ij_xdr_id, ij_xdr_name, ij_gmt_create, ij_gmt_modified
+    </sql>
+
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quotorcloud.quotor.academy.mapper.EmployeeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quotorcloud.quotor.academy.api.entity.Employee">
+        <id column="e_id" property="eId" />
+        <result column="e_name" property="eName" />
+        <result column="e_sex" property="eSex" />
+        <result column="e_phone" property="ePhone" />
+        <result column="e_email" property="eEmail" />
+        <result column="e_join_date" property="eJoinDate" />
+        <result column="e_alias" property="eAlias" />
+        <result column="e_shop_id" property="eShopId" />
+        <result column="e_shop_name" property="eShopName" />
+        <result column="e_position_id" property="ePositionId" />
+        <result column="e_position_name" property="ePositionName" />
+        <result column="e_head_title_id" property="eHeadTitleId" />
+        <result column="e_head_title_name" property="eHeadTitleName" />
+        <result column="e_job_number" property="eJobNumber" />
+        <result column="e_wechat_number" property="eWechatNumber" />
+        <result column="e_identity_card" property="eIdentityCard" />
+        <result column="e_head_img" property="eHeadImg" />
+        <result column="e_address" property="eAddress" />
+        <result column="e_emergency_contact" property="eEmergencyContact" />
+        <result column="e_emer_phone" property="eEmerPhone" />
+        <result column="e_skill" property="eSkill" />
+        <result column="e_describe" property="eDescribe" />
+        <result column="e_works" property="eWorks" />
+        <result column="e_work_state" property="eWorkState" />
+        <result column="e_subscribe" property="eSubscribe" />
+        <result column="e_sort" property="eSort" />
+        <result column="e_gmt_create" property="eGmtCreate" />
+        <result column="e_gmt_modified" property="eGmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        e_id, e_name, e_sex, e_phone, e_email, e_join_date, e_alias, e_shop_id, e_shop_name, e_position_id, e_position_name, e_head_title_id, e_head_title_name, e_job_number, e_wechat_number, e_identity_card, e_head_img, e_address, e_emergency_contact, e_emer_phone, e_skill, e_describe, e_works, e_work_state, e_subscribe, e_sort, e_gmt_create, e_gmt_modified
+    </sql>
+    <select id="selectEmployeePositionAndHeadTitle" resultType="com.quotorcloud.quotor.academy.api.entity.Employee" resultMap="BaseResultMap">
+        select e_position_name,e_head_title_name from bear_employee
+    </select>
+
+</mapper>
