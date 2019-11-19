@@ -9,14 +9,13 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.quotorcloud.quotor.academy.api.dto.CourseOrderDTO;
+import com.quotorcloud.quotor.academy.api.entity.CourseOrder;
 import com.quotorcloud.quotor.academy.service.CourseOrderService;
 import com.quotorcloud.quotor.academy.service.CourseService;
 import com.quotorcloud.quotor.academy.service.TeacherService;
 import com.quotorcloud.quotor.common.core.util.R;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -97,5 +96,18 @@ public class CourseOrderController {
         return R.ok(jsonObject);
     }
 
+    @PostMapping
+    public R saveCourseOrder(@RequestBody CourseOrder courseOrder){
+        return R.ok(courseOrderService.save(courseOrder));
+    }
 
+    /**
+     * 批量修改学习状态
+     * @param courseOrders
+     * @return
+     */
+    @PutMapping("study-state")
+    public R updateBatchStudyState(@RequestBody List<CourseOrder> courseOrders){
+        return R.ok(courseOrderService.updateBatchById(courseOrders));
+    }
 }

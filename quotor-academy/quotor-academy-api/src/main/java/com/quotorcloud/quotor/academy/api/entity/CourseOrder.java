@@ -1,8 +1,6 @@
 package com.quotorcloud.quotor.academy.api.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -21,7 +19,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("p_product_typebear_course_order")
+@TableName("bear_course_order")
 public class CourseOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,6 +27,7 @@ public class CourseOrder implements Serializable {
     /**
      * 唯一标识
      */
+    @TableId(value = "id", type = IdType.UUID)
     private String id;
 
     /**
@@ -116,6 +115,7 @@ public class CourseOrder implements Serializable {
     /**
      * 修改时间
      */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 
     @TableField(exist = false, fill = FieldFill.INSERT_UPDATE)

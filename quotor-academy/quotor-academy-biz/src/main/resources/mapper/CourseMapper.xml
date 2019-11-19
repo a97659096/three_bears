@@ -37,11 +37,14 @@
         from bear_course
         <where>
             c_del_state = 0
+            <if test="course.id != null and course.id != ''">
+                and c_id = #{course.id}
+            </if>
             <if test="course.name != null and course.name != ''">
                 and c_name like concat('%', #{course.name}, '%')
             </if>
-            <if test="course.teacherName != null and course.teacherName != ''">
-                and c_teacher_name like concat('%', #{course.teacherName}, '%')
+            <if test="course.teacherId != null and course.teacherId != ''">
+                and c_teacher_id like concat('%', #{course.teacherId}, '%')
             </if>
             <if test="course.status != null and course.status != ''">
                 and c_status = #{course.status}
@@ -54,6 +57,9 @@
             </if>
             <if test="course.end != null and course.end != ''">
                 and c_start_date <![CDATA[<=]]> #{course.end}
+            </if>
+            <if test="course.surplusPoll != null">
+                and c_surplus_poll <![CDATA[<=]]> #{course.surplusPoll}
             </if>
         </where>
         order by c_gmt_create desc
