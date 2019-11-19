@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quotorcloud.quotor.academy.mapper.EmployeeScheduMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quotorcloud.quotor.academy.api.entity.EmployeeSchedu">
+        <id column="es_id" property="esId" />
+        <result column="es_employee_id" property="esEmployeeId" />
+        <result column="es_date" property="esDate" />
+        <result column="es_class_id" property="esClassId" />
+        <result column="es_gmt_create" property="esGmtCreate" />
+        <result column="es_gmt_modified" property="esGmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        es_id, es_employee_id, es_date, es_class_id, es_gmt_create, es_gmt_modified
+    </sql>
+
+</mapper>
