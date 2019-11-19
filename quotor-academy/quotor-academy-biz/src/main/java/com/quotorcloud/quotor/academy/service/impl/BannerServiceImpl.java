@@ -71,7 +71,7 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
         banner.setBShopName(String.valueOf(user.getDeptName()));
 
         //处理图片
-        FileUtil.saveFileAndField(banner, Banner.class, bannerDTO, "bImg",
+        FileUtil.saveFileAndField(banner, bannerDTO, "bImg",
                 FileConstants.FileType.FILE_BANNER_IMG_DIR, null);
         banner.setBDelState(CommonConstants.STATUS_NORMAL);
         bannerMapper.insert(banner);
@@ -118,8 +118,8 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
 
         BeanUtils.copyProperties(bannerDTO, banner, "b_img");
 
-        FileUtil.removeFileAndField(banner, Banner.class, bannerDTO, "bImg", FileConstants.FileType.FILE_BANNER_IMG_DIR);
-        FileUtil.saveFileAndField(banner, Banner.class, bannerDTO, "bImg",
+        FileUtil.removeFileAndField(banner, bannerDTO, "bImg", FileConstants.FileType.FILE_BANNER_IMG_DIR);
+        FileUtil.saveFileAndField(banner, bannerDTO, "bImg",
                 FileConstants.FileType.FILE_BANNER_IMG_DIR, null);
 
         bannerMapper.updateById(banner);

@@ -68,15 +68,14 @@ public class EmployeeScheduClassServiceImpl extends ServiceImpl<EmployeeScheduCl
     }
 
     @Override
-    public JSONObject listClass(EmployeeScheduClass employeeScheduClass) {
-        Page<EmployeeScheduClass> page = PageUtil.getPage(employeeScheduClass.getPageNo(), employeeScheduClass.getPageSize());
-        IPage<EmployeeScheduClass> employeeScheduClassIPage = employeeScheduClassMapper.selectPage(page, new QueryWrapper<>());
+    public JSONObject listClass(Page<EmployeeScheduClass> page, EmployeeScheduClass employeeScheduClass) {
+        IPage<EmployeeScheduClass> employeeScheduClassIPage =
+                employeeScheduClassMapper.selectPage(page, new QueryWrapper<>());
 
         List<EmployeeScheduClass> records = employeeScheduClassIPage.getRecords();
 
-        List<EmployeeScheduClassVO> employeeScheduClassVOS = records.stream().map(record -> {
-            return getEmployeeScheduClassVO(record);
-        }).collect(Collectors.toList());
+        List<EmployeeScheduClassVO> employeeScheduClassVOS = records.stream().map(this::getEmployeeScheduClassVO)
+                .collect(Collectors.toList());
 
         return PageUtil.getPagePackage("classes", employeeScheduClassVOS, page);
     }

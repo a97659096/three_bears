@@ -143,7 +143,7 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
     public Boolean updateConditionPro(ConditionProDTO conditionProDTO) {
         ConditionPro conditionPro = mapDTOToDO(conditionProDTO);
         //imgString不为空删除
-        FileUtil.removeFileAndField(conditionPro, ConditionPro.class, conditionProDTO, "pImg", FileConstants.FileType.FILE_CONDITION_PRO_IMG_DIR);
+        FileUtil.removeFileAndField(conditionPro, conditionProDTO, "pImg", FileConstants.FileType.FILE_CONDITION_PRO_IMG_DIR);
         conditionProMapper.updateById(conditionPro);
         return Boolean.TRUE;
     }
@@ -169,7 +169,7 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
 
         }
         //保存图片
-        FileUtil.saveFileAndField(conditionPro,ConditionPro.class,conditionProDTO,
+        FileUtil.saveFileAndField(conditionPro,conditionProDTO,
                 "pImg",FileConstants.FileType.FILE_CONDITION_PRO_IMG_DIR, subfolder);
         return conditionPro;
     }

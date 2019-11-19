@@ -1138,9 +1138,9 @@ public class FileUtil {
      * @param filed
      * @param folder
      */
-    public static void saveFileAndField(Object o, Class<?> clazz, Object dto, List<String> filed, String folder, String subfolder){
+    public static void saveFileAndField(Object o, Object dto, List<String> filed, String folder, String subfolder){
         for (String f : filed) {
-            saveFileAndField(o, clazz, dto, f, folder, subfolder);
+            saveFileAndField(o, dto, f, folder, subfolder);
         }
     }
 
@@ -1152,7 +1152,7 @@ public class FileUtil {
      * @param filed 字段名
      * @param folder 文件夹
      */
-    public static void saveFileAndField(Object o, Class<?> clazz, Object dto, String filed, String folder, String subfolder){
+    public static void saveFileAndField(Object o, Object dto, String filed, String folder, String subfolder){
         try {
             Object files = MethodUtil.getGetMethod(dto, filed);
             if(ComUtil.isEmpty(files)){
@@ -1169,7 +1169,7 @@ public class FileUtil {
             if(ComUtil.isEmpty(fileAddress)){
                 return;
             }
-            MethodUtil.setValue(o,clazz,filed,String.class,
+            MethodUtil.setValue(o,o.getClass(),filed,String.class,
                     FileUtil.saveNewImgToDatabase(
                             String.valueOf(ComUtil.isEmpty(getMethod)?"":getMethod),
                             fileAddress));
@@ -1181,13 +1181,11 @@ public class FileUtil {
     /**
      * 批量处理
      * @param o do对象
-     * @param clazz DO类
      * @param dto dto对象
-     * @param filed 字段名
      */
-    public static void removeFileAndField(Object o, Class<?> clazz, Object dto, List<String> fileds, String folder){
+    public static void removeFileAndField(Object o, Object dto, List<String> fileds, String folder){
         for (String filed: fileds) {
-            removeFileAndField(o, clazz, dto, filed, folder);
+            removeFileAndField(o, dto, filed, folder);
         }
     }
 
@@ -1198,7 +1196,7 @@ public class FileUtil {
      * @param dto dto对象
      * @param filed 字段名
      */
-    public static void removeFileAndField(Object o, Class<?> clazz, Object dto, String filed, String folder){
+    public static void removeFileAndField(Object o, Object dto, String filed, String folder){
         try {
             //首先让字段名加上String，此字段是获取是否有删除数据的值
             if(!ComUtil.isEmpty(MethodUtil.getGetMethod(dto, filed+"String"))){
@@ -1212,7 +1210,7 @@ public class FileUtil {
                             (String) MethodUtil.getGetMethod(o, filed), folder);
                 }
                 //删除完成后把值set进DO
-                MethodUtil.setValue(o, clazz, filed, String.class, value);
+                MethodUtil.setValue(o, o.getClass(), filed, String.class, value);
             }
         } catch (Exception e) {
             e.printStackTrace();

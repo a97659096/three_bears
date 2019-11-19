@@ -75,6 +75,7 @@ public class FileConstants {
         public static final String FILE_MENU_IMG_DIR = "/sys/menu/";
         public static final String FILE_EXPEND_IMG_DIR = "/expend/";
         public static final String FILE_BANNER_IMG_DIR = "/banner/";
+        public static final String FILE_MEMBER_IMG_DIR = "/member/";
         public static final String FILE_CONDITION_PRO_IMG_DIR = "/condition/";
         public static final String FILE_ZIP_DIR= "/zip/";
         public static final String FILE_VEDIO_DIR= "/video/";

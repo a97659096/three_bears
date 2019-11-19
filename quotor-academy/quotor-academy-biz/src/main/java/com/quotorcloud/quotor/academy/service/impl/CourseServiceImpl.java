@@ -105,9 +105,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             setCourseDODate(course, courseDTO.getDateRange());
         }
         //是否有删除图片
-        FileUtil.removeFileAndField(course, Course.class, courseDTO, "img", FileConstants.FileType.FILE_COURSE_IMG_DIR_);
+        FileUtil.removeFileAndField(course, courseDTO, "img", FileConstants.FileType.FILE_COURSE_IMG_DIR_);
         //是否有新增图片
-        FileUtil.saveFileAndField(course, Course.class, courseDTO, "img",
+        FileUtil.saveFileAndField(course, courseDTO, "img",
                 FileConstants.FileType.FILE_COURSE_IMG_DIR_,null);
         courseMapper.updateById(course);
         return Boolean.TRUE;

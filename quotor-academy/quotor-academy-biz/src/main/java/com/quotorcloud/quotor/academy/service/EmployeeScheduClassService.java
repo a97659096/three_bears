@@ -1,6 +1,7 @@
 package com.quotorcloud.quotor.academy.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.quotorcloud.quotor.academy.api.entity.EmployeeScheduClass;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -20,7 +21,7 @@ public interface EmployeeScheduClassService extends IService<EmployeeScheduClass
 
     Boolean removeEmployeeScheduClass(String id);
 
-    JSONObject listClass(EmployeeScheduClass employeeScheduClass);
+    JSONObject listClass(Page<EmployeeScheduClass> page, EmployeeScheduClass employeeScheduClass);
 
     Boolean updateEmployeeScheduClass(EmployeeScheduClass employeeScheduClass);
 

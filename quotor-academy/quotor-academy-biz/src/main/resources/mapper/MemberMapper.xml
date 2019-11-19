@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quotorcloud.quotor.academy.mapper.MemberMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quotorcloud.quotor.academy.api.entity.Member">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="sex" property="sex" />
+        <result column="phone" property="phone" />
+        <result column="channel" property="channel" />
+        <result column="shop_id" property="shopId" />
+        <result column="shop_name" property="shopName" />
+        <result column="birthday" property="birthday" />
+        <result column="number" property="number" />
+        <result column="age_range" property="ageRange" />
+        <result column="trace_employee" property="traceEmployee" />
+        <result column="join_date" property="joinDate" />
+        <result column="head_img" property="headImg" />
+        <result column="shop_serial_number" property="shopSerialNumber" />
+        <result column="referrer_id" property="referrerId" />
+        <result column="referre_name" property="referreName" />
+        <result column="identity_card" property="identityCard" />
+        <result column="email" property="email" />
+        <result column="qq" property="qq" />
+        <result column="wechat" property="wechat" />
+        <result column="job" property="job" />
+        <result column="address" property="address" />
+        <result column="remark" property="remark" />
+        <result column="height" property="height" />
+        <result column="weight" property="weight" />
+        <result column="blood_type" property="bloodType" />
+        <result column="taboo" property="taboo" />
+        <result column="member" property="member" />
+        <result column="del_state" property="delState" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapVO" type="com.quotorcloud.quotor.academy.api.vo.MemberVO">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="sex" property="sex" />
+        <result column="phone" property="phone" />
+        <result column="channel" property="channel" />
+        <result column="shop_id" property="shopId" />
+        <result column="shop_name" property="shopName" />
+        <result column="birthday" property="birthday" />
+        <result column="number" property="number" />
+        <result column="age_range" property="ageRange" />
+        <result column="trace_employee" property="traceEmployeeDataBase" />
+        <result column="join_date" property="joinDate" />
+        <result column="head_img" property="headImg" />
+        <result column="shop_serial_number" property="shopSerialNumber" />
+        <result column="referrer_id" property="referrerId" />
+        <result column="referre_name" property="referreName" />
+        <result column="identity_card" property="identityCard" />
+        <result column="email" property="email" />
+        <result column="qq" property="qq" />
+        <result column="wechat" property="wechat" />
+        <result column="job" property="job" />
+        <result column="address" property="address" />
+        <result column="remark" property="remark" />
+        <result column="height" property="height" />
+        <result column="weight" property="weight" />
+        <result column="blood_type" property="bloodType" />
+        <result column="taboo" property="taboo" />
+        <result column="member" property="member" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, sex, phone, channel, shop_id, shop_name, birthday, number, age_range, trace_employee, join_date, head_img, shop_serial_number, referrer_id, referre_name, identity_card, email, qq, wechat, job, address, remark, height, weight, blood_type, taboo, member, del_state, gmt_create, gmt_modified
+    </sql>
+
+<!--    分页查询客户信息-->
+    <select id="selectMemberPage" resultType="com.quotorcloud.quotor.academy.api.vo.MemberVO" resultMap="BaseResultMapVO">
+        select
+        <include refid="Base_Column_List"></include>
+        from bear_member
+        <where>
+            <if test="member.member != null and member.member != ''">
+                member = #{member.member}
+            </if>
+            <if test="member.birthdayRemind != null and member.birthdayRemind != ''">
+
+            </if>
+            <if test="member.channel != null and member.channel != ''">
+                channel = #{member.channel}
+            </if>
+        </where>
+    </select>
+
+<!--    按id查询客户信息-->
+    <select id="selectMemberById" resultType="com.quotorcloud.quotor.academy.api.vo.MemberVO" resultMap="BaseResultMapVO">
+        select
+        <include refid="Base_Column_List"></include>
+        from bear_member
+        where id = #{id}
+    </select>
+
+</mapper>

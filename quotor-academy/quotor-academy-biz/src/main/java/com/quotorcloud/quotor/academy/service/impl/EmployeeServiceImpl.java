@@ -113,7 +113,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         }
         Employee employee = employeeMapper.selectById(id);
         List<String> fields = Lists.newArrayList("headImg", "works");
-        FileUtil.removeFileAndField(employee, Employee.class, employeeDTO, fields, FileConstants.FileType.FILE_EMPLOYEE_IMG_DIR_);
+        FileUtil.removeFileAndField(employee, employeeDTO, fields, FileConstants.FileType.FILE_EMPLOYEE_IMG_DIR_);
         employeeMapper.updateById(mapEmployeeDTOToDO(employeeDTO, employee));
         return Boolean.TRUE;
     }
@@ -245,7 +245,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         }
 
         //处理头像和作品集（通过反射得到方法信息进行操作）
-        FileUtil.saveFileAndField(employee, Employee.class, employeeDTO,
+        FileUtil.saveFileAndField(employee, employeeDTO,
                 Lists.newArrayList("headImg","works"),
                 FileConstants.FileType.FILE_EMPLOYEE_IMG_DIR_, null);
         return employee;

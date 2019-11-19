@@ -142,9 +142,9 @@ public class ExpendServiceImpl extends ServiceImpl<ExpendMapper, Expend> impleme
         //设置店铺信息
         setShopInfo(expend);
 
-        FileUtil.removeFileAndField(expend, Expend.class, expendDTO, "eImg", FileConstants.FileType.FILE_EXPEND_IMG_DIR);
+        FileUtil.removeFileAndField(expend, expendDTO, "eImg", FileConstants.FileType.FILE_EXPEND_IMG_DIR);
 
-        FileUtil.saveFileAndField(expend, Expend.class, expendDTO, "eImg", FileConstants.FileType.FILE_EXPEND_IMG_DIR,null);
+        FileUtil.saveFileAndField(expend, expendDTO, "eImg", FileConstants.FileType.FILE_EXPEND_IMG_DIR,null);
         expendMapper.updateById(expend);
         return Boolean.TRUE;
     }

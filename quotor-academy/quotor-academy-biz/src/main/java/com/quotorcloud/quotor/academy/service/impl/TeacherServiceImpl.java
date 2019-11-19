@@ -127,7 +127,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
             Teacher teacher = teacherMapper.selectById(teacherDTO.getId());
             List<String> fileds = Lists.newArrayList("environment","passport","headImg");
             //对集合中字段进行删除文件操作
-            FileUtil.removeFileAndField(teacher, Teacher.class, teacherDTO, fileds, FileConstants.FileType.FILE_TEACHER_IMG_DIR);
+            FileUtil.removeFileAndField(teacher, teacherDTO, fileds, FileConstants.FileType.FILE_TEACHER_IMG_DIR);
 
             teacherMapper.updateById(mapTeacherDTOToDO(teacherDTO, teacher));
         } catch (Exception e) {
@@ -204,7 +204,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         listBoxService.checkListBox(teacher.getNationality(), ListBoxConstants.TEACHER_MODULE,
                 ListBoxConstants.TEACHER_MODULE_NATION);
         //插入头像并返回头像地址
-        FileUtil.saveFileAndField(teacher, Teacher.class, teacherDTO,
+        FileUtil.saveFileAndField(teacher, teacherDTO,
                 Lists.newArrayList("headImg", "environment","passport"),
                 FileConstants.FileType.FILE_TEACHER_IMG_DIR, null);
         return teacher;
