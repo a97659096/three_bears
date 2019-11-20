@@ -80,11 +80,12 @@
         <include refid="Base_Column_List"></include>
         from bear_member
         <where>
+            del_state=0
             <if test="member.member != null and member.member != ''">
-                member = #{member.member}
+                and member = #{member.member}
             </if>
             <if test="member.birthdayRemind != null and member.birthdayRemind != ''">
-
+                and DATEDIFF(birthday,SYSDATE()) <![CDATA[<=]]> #{birthdayRemind}
             </if>
             <if test="member.channel != null and member.channel != ''">
                 channel = #{member.channel}

@@ -1,9 +1,9 @@
 package com.quotorcloud.quotor.academy.api.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 public class MemberVO {
@@ -58,6 +58,7 @@ public class MemberVO {
     /**
      * 跟踪员工
      */
+    @JSONField(serialize = false)
     private String traceEmployeeDataBase;
 
     private String traceEmployee;

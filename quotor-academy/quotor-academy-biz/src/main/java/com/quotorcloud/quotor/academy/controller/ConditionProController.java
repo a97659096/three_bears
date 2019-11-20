@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.*;
  * @since 2019-11-08
  */
 @RestController
-@RequestMapping("/pro")
+@RequestMapping("/condition/pro")
 public class ConditionProController {
 
     @Autowired
     private ConditionProService conditionProService;
 
-    @PostMapping("save")
+    @PostMapping
     public R saveConditionPro(ConditionProDTO conditionProDTO){
         return R.ok(conditionProService.saveConditionPro(conditionProDTO));
     }
@@ -34,7 +34,7 @@ public class ConditionProController {
         return R.ok(conditionProService.listConditionPro(conditionProDTO));
     }
 
-    @PutMapping("update")
+    @PutMapping
     public R updateConditionPro(ConditionProDTO conditionProDTO){
         return R.ok(conditionProService.updateConditionPro(conditionProDTO));
     }

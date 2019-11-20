@@ -81,6 +81,7 @@ public class ConditionProDTO {
      */
     private MultipartFile[] pImg;
 
+    private List<String> pImgString;
     /**
      * 删除状态，0正常，1删除
      */
