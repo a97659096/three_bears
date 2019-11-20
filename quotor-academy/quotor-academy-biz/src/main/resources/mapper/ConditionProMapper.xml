@@ -91,6 +91,7 @@
         <where>
             p_del_state=0
             and p_type = #{pro.pType}
+            and p_shop_id = #{pro.pShopId}
             <if test="pro.categoryIds != null and pro.categoryIds != ''">
                 and p_category_id in
                 <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
@@ -108,9 +109,6 @@
             </if>
             <if test="pro.pState != null and pro.pState != ''">
                 and p_state = #{pro.pState}
-            </if>
-            <if test="pro.pShopId != null and pro.pShopId != ''">
-                and p_shop_id = #{pro.pShopId}
             </if>
         </where>
         order by p_gmt_create desc
