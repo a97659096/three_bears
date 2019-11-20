@@ -137,7 +137,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         }
 
         //获取用户信息并赋值
-        shopSetterUtil.shopSetter(member, Member.class, memberDTO.getShopId());
+        shopSetterUtil.shopSetter(member, memberDTO.getShopId());
 
         //推荐人
         if(!ComUtil.isEmpty(memberDTO.getReferrerId())){

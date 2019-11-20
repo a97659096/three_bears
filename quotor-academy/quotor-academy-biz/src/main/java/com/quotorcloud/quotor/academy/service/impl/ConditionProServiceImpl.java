@@ -16,6 +16,7 @@ import com.quotorcloud.quotor.academy.mapper.ConditionProMapper;
 import com.quotorcloud.quotor.academy.service.ConditionCategoryService;
 import com.quotorcloud.quotor.academy.service.ConditionProService;
 import com.quotorcloud.quotor.academy.service.ConditionSetMealDetailService;
+import com.quotorcloud.quotor.academy.util.ShopSetterUtil;
 import com.quotorcloud.quotor.common.core.constant.CommonConstants;
 import com.quotorcloud.quotor.common.core.constant.FileConstants;
 import com.quotorcloud.quotor.common.core.util.*;
@@ -46,6 +47,9 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
 
     @Autowired
     private ConditionSetMealDetailService setMealDetailService;
+
+    @Autowired
+    private ShopSetterUtil shopSetterUtil;
 
     @Override
     public String treeProByCategory(ConditionCategory conditionCategory) {
@@ -118,10 +122,6 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
     @Override
     public Boolean saveConditionPro(ConditionProDTO conditionProDTO) {
         ConditionPro conditionPro = mapDTOToDO(conditionProDTO);
-        //TODO 处理店铺
-        if(!ComUtil.isEmpty(conditionProDTO.getPShopId())){
-
-        }
         conditionPro.setPDelState(CommonConstants.STATUS_NORMAL);
         conditionProMapper.insert(conditionPro);
         //为套餐时，去判断是否有传入套餐内容，并进行插入操作
@@ -148,6 +148,10 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
     private ConditionPro mapDTOToDO(ConditionProDTO conditionProDTO) {
         ConditionPro conditionPro = new ConditionPro();
         BeanUtils.copyProperties(conditionProDTO,conditionPro, "pImg", "pImgString");
+
+        //設置店鋪信息
+        shopSetterUtil.shopSetter(conditionPro, conditionProDTO.getShopId());
+
         //如果类别id不为空，查询出名称set进去
         if(!ComUtil.isEmpty(conditionProDTO.getPCategoryId())){
             ConditionCategory categoryServiceOne = conditionCategoryService.getOne(new QueryWrapper<ConditionCategory>().eq("c_id",
@@ -184,6 +188,8 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
             List<String> categoryIds = conditionCategoryService.findCategoryIds(conditionProDTO.getPCategoryId());
             conditionProDTO.setCategoryIds(categoryIds);
         }
+
+        shopSetterUtil.shopSetter(conditionProDTO, conditionProDTO.getShopId());
 
         //查询数据
         IPage<ConditionProVO> conditionProVOIPage = conditionProMapper.selectProPage(page, conditionProDTO);

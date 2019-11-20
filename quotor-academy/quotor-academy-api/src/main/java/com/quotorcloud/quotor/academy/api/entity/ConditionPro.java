@@ -41,12 +41,14 @@ public class ConditionPro implements Serializable {
     /**
      * 适用门店标识
      */
-    private String pShopId;
+    @TableField(value = "p_shop_id")
+    private String shopId;
 
     /**
      * 适用门店名称
      */
-    private String pShopName;
+    @TableField(value = "p_shop_name")
+    private String shopName;
 
     /**
      * 统一售价

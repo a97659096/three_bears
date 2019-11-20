@@ -34,8 +34,8 @@
     <resultMap id="VOBaseResultMap" type="com.quotorcloud.quotor.academy.api.vo.ConditionProVO">
         <result column="p_id" property="pId" />
         <result column="p_name" property="pName" />
-        <result column="p_shop_id" property="pShopId" />
-        <result column="p_shop_name" property="pShopName" />
+        <result column="p_shop_id" property="shopId" />
+        <result column="p_shop_name" property="shopName" />
         <result column="p_unified_price" property="pUnifiedPrice" />
         <result column="p_time_length" property="pTimeLength" />
         <result column="p_category_id" property="pCategoryId" />
@@ -87,7 +87,7 @@
         <include refid="Base_Column_List"></include>,
         <include refid="Base_Column_List_Detail"></include>
         from bear_condition_pro cp left join bear_condition_set_meal_detail smd
-
+        on cp.p_id = smd.smd_pro_id
         <where>
             p_del_state=0
             and p_type = #{pro.pType}

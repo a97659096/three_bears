@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ShopSetterUtil {
 
-    public void shopSetter(Object o, Class<?> clazz, String shopId){
+    public void shopSetter(Object o, String shopId){
 
         //获取用户信息并赋值
         if(!ComUtil.isEmpty(shopId)){
@@ -19,8 +19,8 @@ public class ShopSetterUtil {
             if(ComUtil.isEmpty(user) || ComUtil.isEmpty(user.getDeptId())){
                 return;
             }
-            MethodUtil.setValue(o, clazz, "shopId", String.class, String.valueOf(user.getDeptId()));
-            MethodUtil.setValue(o, clazz, "shopName", String.class, user.getDeptName());
+            MethodUtil.setValue(o, o.getClass(), "shopId", String.class, String.valueOf(user.getDeptId()));
+            MethodUtil.setValue(o, o.getClass(), "shopName", String.class, user.getDeptName());
         }
     }
 }

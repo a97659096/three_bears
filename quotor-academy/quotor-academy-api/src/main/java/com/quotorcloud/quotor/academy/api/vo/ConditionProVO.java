@@ -20,12 +20,12 @@ public class ConditionProVO {
     /**
      * 适用门店标识
      */
-    private String pShopId;
+    private String shopId;
 
     /**
      * 适用门店名称
      */
-    private String pShopName;
+    private String shopName;
 
     /**
      * 统一售价
