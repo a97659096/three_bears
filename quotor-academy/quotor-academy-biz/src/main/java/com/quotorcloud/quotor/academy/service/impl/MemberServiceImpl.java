@@ -1,7 +1,7 @@
 package com.quotorcloud.quotor.academy.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.quotorcloud.quotor.academy.api.dto.MemberDTO;
@@ -11,7 +11,6 @@ import com.quotorcloud.quotor.academy.api.vo.MemberVO;
 import com.quotorcloud.quotor.academy.mapper.MemberMapper;
 import com.quotorcloud.quotor.academy.service.EmployeeService;
 import com.quotorcloud.quotor.academy.service.MemberService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quotorcloud.quotor.academy.util.ShopSetterUtil;
 import com.quotorcloud.quotor.common.core.constant.CommonConstants;
 import com.quotorcloud.quotor.common.core.constant.FileConstants;
@@ -49,6 +48,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         Member member = new Member();
         //映射赋值
         mapMemberDODTO(memberDTO, member);
+        member.setDelState(CommonConstants.STATUS_NORMAL);
+        member.setMember(CommonConstants.NOT_MEMBER);
         //存入图片
         FileUtil.saveFileAndField(member, memberDTO, "headImg",
                 FileConstants.FileType.FILE_MEMBER_IMG_DIR, null);
@@ -108,7 +109,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
                         .splitToList(traceEmployeeDataBase);
                 // id:name  把name取出来
                 List<String> traceEmployeeList = traceList.stream().map(trace ->
-                        trace.substring(trace.indexOf(":")))
+                        trace.substring(trace.indexOf(":") + 1))
                         .collect(Collectors.toList());
                 //再把name用逗号隔开拼成字符串
                 String employeeName = Joiner.on(CommonConstants.SEPARATOR).join(traceEmployeeList);
@@ -121,14 +122,14 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     private void mapMemberDODTO(MemberDTO memberDTO, Member member) {
         BeanUtils.copyProperties(memberDTO, member, "headImg", "traceEmployee");
 
-        List<String> traceEmployee = memberDTO.getTraceEmployee();
+        List<String> traceEmployee = Splitter.on(CommonConstants.SEPARATOR).splitToList(memberDTO.getTraceEmployee());
 
         //存入跟踪员工
         if(!ComUtil.isEmpty(traceEmployee)){
             //查询员工信息
             List<Employee> employees = (List<Employee>) employeeService.listByIds(traceEmployee);
             //将员工信息中的id和name用:分开add进一个数组  id:name
-            List<String> idNameMap = employees.stream().map(employee -> employee.getId() + employee.getName())
+            List<String> idNameMap = employees.stream().map(employee -> employee.getId() + ":" + employee.getName())
                     .collect(Collectors.toList());
             //然后再用，把集合合并， id:name,id:name
             String traceEmp = Joiner.on(CommonConstants.SEPARATOR).join(idNameMap);

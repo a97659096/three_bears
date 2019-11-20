@@ -77,12 +77,8 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
                 conditionPros.stream().collect(Collectors.groupingBy(ConditionPro::getPCategoryId));
         //把项目产品或者套餐追加到类别里
         setProInTree(treeNodeList, map);
-        PropertyFilter filter = (o,s,o1) -> {
-            if(o1 instanceof List && ((List)o1).size() == 0){
-                return false;
-            }
-            return true;
-        };
+
+        PropertyFilter filter = (o,s,o1) -> !(o1 instanceof List) || ((List) o1).size() != 0;
         return JSON.toJSONString(treeNodeList, filter);
     }
 

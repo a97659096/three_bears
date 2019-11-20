@@ -5,7 +5,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 public class MemberDTO {
@@ -45,6 +44,7 @@ public class MemberDTO {
     /**
      * 生日
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
     /**
@@ -60,7 +60,7 @@ public class MemberDTO {
     /**
      * 跟踪员工
      */
-    private List<String> traceEmployee;
+    private String traceEmployee;
 
     /**
      * 入会日期
@@ -144,6 +144,11 @@ public class MemberDTO {
      * 过敏禁忌
      */
     private String taboo;
+
+    /**
+     * 是否是会员，1会员，2散客
+     */
+    private Integer member;
 
     private Integer pageNo;
 

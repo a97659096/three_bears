@@ -19,7 +19,7 @@ public class ShopSetterUtil {
             if(ComUtil.isEmpty(user) || ComUtil.isEmpty(user.getDeptId())){
                 return;
             }
-            MethodUtil.setValue(o, clazz, "shopId", String.class, user.getDeptId());
+            MethodUtil.setValue(o, clazz, "shopId", String.class, String.valueOf(user.getDeptId()));
             MethodUtil.setValue(o, clazz, "shopName", String.class, user.getDeptName());
         }
     }
