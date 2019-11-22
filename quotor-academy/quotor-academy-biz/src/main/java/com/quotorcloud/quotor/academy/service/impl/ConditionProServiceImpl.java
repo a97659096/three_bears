@@ -166,7 +166,6 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
             subfolder = "product\\";
         }else if(conditionProDTO.getPType().equals(CommonConstants.CONDITION_SET_MEAL)){
             subfolder = "meal\\";
-
         }
         //保存图片
         FileUtil.saveFileAndField(conditionPro,conditionProDTO,
