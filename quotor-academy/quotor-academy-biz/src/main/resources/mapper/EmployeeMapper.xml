@@ -34,12 +34,32 @@
         <result column="e_gmt_modified" property="eGmtModified" />
     </resultMap>
 
+    <resultMap id="AppointEmployeeMap" type="com.quotorcloud.quotor.academy.api.dto.AppointEmployeeDTO">
+        <result column="e_id" property="employeeId"/>
+        <result column="e_name" property="employeeName"/>
+        <result column="e_job_number" property="employeeNo"/>
+        <result column="e_position_name" property="positionName"/>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         e_id, e_name, e_sex, e_phone, e_email, e_join_date, e_alias, e_shop_id, e_shop_name, e_position_id, e_position_name, e_head_title_id, e_head_title_name, e_job_number, e_wechat_number, e_identity_card, e_head_img, e_address, e_emergency_contact, e_emer_phone, e_skill, e_describe, e_works, e_work_state, e_subscribe, e_sort, e_gmt_create, e_gmt_modified
     </sql>
+
     <select id="selectEmployeePositionAndHeadTitle" resultType="com.quotorcloud.quotor.academy.api.entity.Employee" resultMap="BaseResultMap">
         select e_position_name,e_head_title_name from bear_employee
+    </select>
+
+    <!-- 查询预约员工封装   -->
+    <select id="selectAppointEmployee" resultType="com.quotorcloud.quotor.academy.api.dto.AppointEmployeeDTO"
+    resultMap="AppointEmployeeMap">
+        select e_id, e_name, e_job_number, e_position_name from bear_employee
+        <where>
+            e_del_state = 0 and e_work_state = 1
+            <if test="shopId != null and shopId != ''">
+                and e_shop_id = #{shopId}
+            </if>
+        </where>
     </select>
 
 </mapper>

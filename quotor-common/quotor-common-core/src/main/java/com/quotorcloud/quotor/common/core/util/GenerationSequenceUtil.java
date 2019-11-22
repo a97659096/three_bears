@@ -1,6 +1,12 @@
 package com.quotorcloud.quotor.common.core.util;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 /**
@@ -8,6 +14,7 @@ import java.util.UUID;
  * @since on 2018/5/8.
  */
 public class GenerationSequenceUtil {
+
 
     /**
      * 生成4位随机数
@@ -40,5 +47,7 @@ public class GenerationSequenceUtil {
         }
         return uuid;
     }
+
+
 
 }
