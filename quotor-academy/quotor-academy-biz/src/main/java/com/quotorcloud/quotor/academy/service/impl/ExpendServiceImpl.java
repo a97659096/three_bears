@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.quotorcloud.quotor.academy.api.dto.ExpendDTO;
 import com.quotorcloud.quotor.academy.api.entity.Expend;
@@ -55,13 +57,21 @@ public class ExpendServiceImpl extends ServiceImpl<ExpendMapper, Expend> impleme
     @Override
     public Boolean saveExpend(ExpendDTO expendDTO) {
         Expend expend = new Expend();
-        BeanUtils.copyProperties(expendDTO, expend, "eImg");
+
+        BeanUtils.copyProperties(expendDTO, expend, "eImg", "eEmployeeNameList");
+
         expend.setEDelState(CommonConstants.STATUS_NORMAL);
         if(!ComUtil.isEmpty(expendDTO.getEImg())){
             String affixName = FileUtil.saveFile(expendDTO.getEImg(),
                     FileConstants.FileType.FILE_EXPEND_IMG_DIR, AFFIX);
             expend.setEImg(affixName);
         }
+
+        if(!ComUtil.isEmpty(expendDTO.getEEmployeeNameList())){
+            String empNameList = Joiner.on(CommonConstants.SEPARATOR).join(expendDTO.getEEmployeeNameList());
+            expend.setEEmployeeNameList(empNameList);
+        }
+
         //设置店铺信息
         setShopInfo(expend);
 
@@ -105,7 +115,10 @@ public class ExpendServiceImpl extends ServiceImpl<ExpendMapper, Expend> impleme
         List<ExpendVO> expendVOS = Lists.newArrayList();
         for(Expend expend : records){
             ExpendVO expendVO = new ExpendVO();
-            BeanUtils.copyProperties(expend, expendVO, "eImg");
+            BeanUtils.copyProperties(expend, expendVO, "eImg", "eEmployeeNameList");
+            if(!ComUtil.isEmpty(expend.getEEmployeeNameList())){
+                expendVO.setEEmployeeNameList(Splitter.on(CommonConstants.SEPARATOR).splitToList(expend.getEEmployeeNameList()));
+            }
             FileUtil.addPrefix(expend, ExpendVO.class, expendVO, "eImg");
             expendVOS.add(expendVO);
         }

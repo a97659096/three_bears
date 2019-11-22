@@ -62,6 +62,7 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
                         "c_shop_id", shopId)
                 .eq(!ComUtil.isEmpty(conditionCategory.getTypes()),
                         "p_type", conditionCategory.getTypes()));
+
         List<TreeNode> treeNodes = categoryTreeList.stream().map(categoryTree -> {
             TreeNode treeNode = new TreeNode();
             treeNode.setId(categoryTree.getId());
@@ -121,7 +122,8 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
      */
     @Override
     public Boolean saveConditionPro(ConditionProDTO conditionProDTO) {
-        ConditionPro conditionPro = mapDTOToDO(conditionProDTO);
+        ConditionPro conditionPro = new ConditionPro();
+        mapDTOToDO(conditionProDTO, conditionPro);
         conditionPro.setPDelState(CommonConstants.STATUS_NORMAL);
         conditionProMapper.insert(conditionPro);
         //为套餐时，去判断是否有传入套餐内容，并进行插入操作
@@ -137,7 +139,8 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
 
     @Override
     public Boolean updateConditionPro(ConditionProDTO conditionProDTO) {
-        ConditionPro conditionPro = mapDTOToDO(conditionProDTO);
+        ConditionPro conditionPro = conditionProMapper.selectById(conditionProDTO.getId());
+        mapDTOToDO(conditionProDTO, conditionPro);
         //imgString不为空删除
         FileUtil.removeFileAndField(conditionPro, conditionProDTO, "pImg", FileConstants.FileType.FILE_CONDITION_PRO_IMG_DIR);
         conditionProMapper.updateById(conditionPro);
@@ -145,29 +148,29 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
     }
 
     //DTO DO 映射 供新增和修改使用
-    private ConditionPro mapDTOToDO(ConditionProDTO conditionProDTO) {
-        ConditionPro conditionPro = new ConditionPro();
-        BeanUtils.copyProperties(conditionProDTO,conditionPro, "pImg", "pImgString");
+    private ConditionPro mapDTOToDO(ConditionProDTO conditionProDTO, ConditionPro conditionPro) {
+        BeanUtils.copyProperties(conditionProDTO,conditionPro, "pImg", "pImgString", "pCategoryId");
 
         //設置店鋪信息
         shopSetterUtil.shopSetter(conditionPro, conditionProDTO.getShopId());
 
         //如果类别id不为空，查询出名称set进去
-        if(!ComUtil.isEmpty(conditionProDTO.getPCategoryId())){
+        List<String> pCategoryIds = conditionProDTO.getPCategoryId();
+        if(!ComUtil.isEmpty(pCategoryIds)){
             ConditionCategory categoryServiceOne = conditionCategoryService.getOne(new QueryWrapper<ConditionCategory>().eq("c_id",
-                    conditionProDTO.getPCategoryId()));
+                    pCategoryIds.get(pCategoryIds.size()-1)));
             conditionPro.setPCategoryName(categoryServiceOne.getCName());
         }
         //图片文件夹名称
         String subfolder = null;
         if(conditionProDTO.getPType().equals(CommonConstants.CONDITION_PROJECT)){
-            subfolder = "project\\";
+            subfolder = "project/";
         }else if(conditionProDTO.getPType().equals(CommonConstants.CONDITION_PRODUCT)){
-            subfolder = "product\\";
+            subfolder = "product/";
         }else if(conditionProDTO.getPType().equals(CommonConstants.CONDITION_SET_MEAL)){
-            subfolder = "meal\\";
-
+            subfolder = "meal/";
         }
+
         //保存图片
         FileUtil.saveFileAndField(conditionPro,conditionProDTO,
                 "pImg",FileConstants.FileType.FILE_CONDITION_PRO_IMG_DIR, subfolder);
@@ -182,10 +185,11 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
     @Override
     public JSONObject listConditionPro(ConditionProDTO conditionProDTO) {
         Page<ConditionPro> page = PageUtil.getPage(conditionProDTO.getPageNo(), conditionProDTO.getPageSize());
+        List<String> pCategoryIds = conditionProDTO.getPCategoryId();
         //查父级跟着查出子级id集合再set进去
-        if(!ComUtil.isEmpty(conditionProDTO.getPCategoryId())){
+        if(!ComUtil.isEmpty(pCategoryIds)){
             //查询id集合
-            List<String> categoryIds = conditionCategoryService.findCategoryIds(conditionProDTO.getPCategoryId());
+            List<String> categoryIds = conditionCategoryService.findCategoryIds(pCategoryIds.get(pCategoryIds.size()-1));
             conditionProDTO.setCategoryIds(categoryIds);
         }
 
@@ -201,9 +205,11 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
                 conditionProVO.setPImg(FileUtil.getJsonObjects(conditionProVO.getImg()));
             }
         }
-        return PageUtil.getPagePackage("conditionPros", records, page);
+        //不让数组大小为0的继续返回
+        PropertyFilter filter = (o,s,o1) -> !(o1 instanceof List) || ((List) o1).size() != 0;
+        String result = JSON.toJSONString(records, filter);
+        return PageUtil.getPagePackage("conditionPros", JSON.parse(result), page);
     }
-
 
 
     /**

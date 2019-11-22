@@ -63,6 +63,41 @@ public class ConditionProVO {
     private BigDecimal pExperiencePrice;
 
     /**
+     * 产品类型
+     */
+    private Integer pProductType;
+
+    /**
+     * 产品单位
+     */
+    private String pProductUnit;
+
+    /**
+     * 产品品牌
+     */
+    private String pProductBrand;
+
+    /**
+     * 产品形态
+     */
+    private Integer pProductForm;
+
+    /**
+     * 产品容量
+     */
+    private String pProductCapacity;
+
+    /**
+     * 产品保质期
+     */
+    private String pProductExpirDate;
+
+    /**
+     * 类型，1项目，2产品
+     */
+    private Integer pType;
+
+    /**
      * 项目描述
      */
     private String pDescribe;

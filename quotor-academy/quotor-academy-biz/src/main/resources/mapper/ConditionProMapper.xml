@@ -91,11 +91,11 @@
         <where>
             p_del_state=0
             and p_type = #{pro.pType}
-            and p_shop_id = #{pro.pShopId}
-            <if test="pro.categoryIds != null and pro.categoryIds != ''">
+            and p_shop_id = #{pro.shopId}
+            <if test="pro.categoryIds != null and pro.categoryIds.size > 0">
                 and p_category_id in
-                <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
-                    #{id.categoryIds}
+                <foreach collection="pro.categoryIds" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
                 </foreach>
             </if>
             <if test="pro.pName != null and pro.pName != ''">

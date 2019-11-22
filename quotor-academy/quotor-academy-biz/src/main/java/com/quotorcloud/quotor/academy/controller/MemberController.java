@@ -1,12 +1,16 @@
 package com.quotorcloud.quotor.academy.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.quotorcloud.quotor.academy.api.dto.MemberDTO;
+import com.quotorcloud.quotor.academy.service.EmployeeService;
 import com.quotorcloud.quotor.academy.service.MemberService;
 import com.quotorcloud.quotor.common.core.util.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -22,6 +26,9 @@ public class MemberController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     @PostMapping
     public R saveMember(MemberDTO memberDTO){
@@ -46,6 +53,16 @@ public class MemberController {
     @GetMapping("list/{id}")
     public R selectMemberById(@PathVariable String id){
         return R.ok(memberService.getMemberById(id));
+    }
+
+    @GetMapping("list/box")
+    public R listBoxMember(String shopId){
+        List<JSONObject> employeeListBox = employeeService.selectEmployeeListBox(shopId);
+        List<JSONObject>  memberListBox = memberService.selectMemberListBox(shopId);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("emp", employeeListBox);
+        jsonObject.put("mem", memberListBox);
+        return R.ok(jsonObject);
     }
 
 }

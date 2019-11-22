@@ -44,7 +44,7 @@ public class ConditionProDTO {
     /**
      * 类别标识
      */
-    private String pCategoryId;
+    private List<String> pCategoryId;
 
     /**
      * 类别名称

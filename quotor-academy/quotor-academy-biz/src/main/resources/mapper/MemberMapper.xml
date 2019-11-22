@@ -85,10 +85,16 @@
                 and member = #{member.member}
             </if>
             <if test="member.birthdayRemind != null and member.birthdayRemind != ''">
-                and DATEDIFF(birthday,SYSDATE()) <![CDATA[<=]]> #{birthdayRemind}
+                and DATEDIFF(birthday,SYSDATE()) <![CDATA[<=]]> #{member.birthdayRemind}
             </if>
             <if test="member.channel != null and member.channel != ''">
-                channel = #{member.channel}
+                and channel = #{member.channel}
+            </if>
+            <if test="member.name != null and member.name != ''">
+                and name like concat('%', #{member.name}, '%')
+            </if>
+            <if test="member.shopId != null and member.shopId != ''">
+                and shop_id = #{member.shopId}
             </if>
         </where>
     </select>

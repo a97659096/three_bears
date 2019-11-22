@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class MemberVO {
@@ -61,7 +62,7 @@ public class MemberVO {
     @JSONField(serialize = false)
     private String traceEmployeeDataBase;
 
-    private String traceEmployee;
+    private List<String> traceEmployee;
 
     /**
      * 入会日期

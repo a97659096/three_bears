@@ -23,9 +23,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * <p>
- * 员工排班班次信息表 服务实现类
- * </p>
  *
  * @author tianshihao
  * @since 2019-11-19

@@ -64,7 +64,7 @@ public class ExpendVO {
     /**
      * 关联员工
      */
-    private String eEmployeeNameList;
+    private List<String> eEmployeeNameList;
 
     /**
      * 相关图片

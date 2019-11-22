@@ -1,10 +1,13 @@
 package com.quotorcloud.quotor.academy.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.quotorcloud.quotor.academy.api.dto.MemberDTO;
 import com.quotorcloud.quotor.academy.api.entity.Member;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.quotorcloud.quotor.academy.api.vo.MemberVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -25,4 +28,6 @@ public interface MemberService extends IService<Member> {
     Boolean removeMember(String id);
 
     MemberVO getMemberById(String id);
+
+    List<JSONObject> selectMemberListBox(String shopId);
 }

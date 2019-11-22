@@ -61,7 +61,7 @@ public class ExpendDTO {
     /**
      * 关联员工
      */
-    private String eEmployeeNameList;
+    private List<String> eEmployeeNameList;
 
     private String dateRange;
 

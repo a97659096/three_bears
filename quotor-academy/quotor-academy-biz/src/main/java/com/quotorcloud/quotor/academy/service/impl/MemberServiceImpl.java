@@ -1,5 +1,7 @@
 package com.quotorcloud.quotor.academy.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.base.Joiner;
@@ -16,6 +18,8 @@ import com.quotorcloud.quotor.common.core.constant.CommonConstants;
 import com.quotorcloud.quotor.common.core.constant.FileConstants;
 import com.quotorcloud.quotor.common.core.util.ComUtil;
 import com.quotorcloud.quotor.common.core.util.FileUtil;
+import com.quotorcloud.quotor.common.security.service.QuotorUser;
+import com.quotorcloud.quotor.common.security.util.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,6 +64,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
     @Override
     public Page<MemberVO> listMember(Page page, MemberDTO memberDTO) {
+        shopSetterUtil.shopSetter(memberDTO, memberDTO.getShopId());
         //分页查询
         Page<MemberVO> memberVOPage = memberMapper.selectMemberPage(page, memberDTO);
         for (MemberVO memberVO : memberVOPage.getRecords()) {
@@ -67,8 +72,6 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         }
         return memberVOPage;
     }
-
-
 
     @Override
     public Boolean updateMember(MemberDTO memberDTO) {
@@ -80,7 +83,10 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
         BeanUtils.copyProperties(memberDTO, member, "headImg", "traceEmployee");
         mapMemberDODTO(memberDTO, member);
-        return null;
+
+        memberMapper.updateById(member);
+
+        return Boolean.TRUE;
     }
 
     @Override
@@ -94,8 +100,30 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setId(id);
         MemberVO memberVO = memberMapper.selectMemberById(id);
-        mapMemberDOVO(memberVO);
+        if(!ComUtil.isEmpty(memberVO)){
+            mapMemberDOVO(memberVO);
+        }
         return memberVO;
+    }
+
+    @Override
+    public List<JSONObject> selectMemberListBox(String shopId) {
+        //获取店铺信息
+        QuotorUser user = SecurityUtils.getUser();
+        if(ComUtil.isEmpty(user)){
+            return null;
+        }
+        if(ComUtil.isEmpty(user.getDeptId())){
+            return null;
+        }
+        List<Member> members = memberMapper.selectList(new QueryWrapper<Member>().eq("del_state", CommonConstants.STATUS_NORMAL)
+                .eq("shop_id", ComUtil.isEmpty(shopId) ? user.getDeptId() : shopId));
+        return members.stream().map(member -> {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", member.getId());
+            jsonObject.put("name", member.getName());
+            return jsonObject;
+        }).collect(Collectors.toList());
     }
 
 
@@ -112,9 +140,9 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
                         trace.substring(trace.indexOf(":") + 1))
                         .collect(Collectors.toList());
                 //再把name用逗号隔开拼成字符串
-                String employeeName = Joiner.on(CommonConstants.SEPARATOR).join(traceEmployeeList);
+//                String employeeName = Joiner.on(CommonConstants.SEPARATOR).join(traceEmployeeList);
                 //set进去
-                memberVO.setTraceEmployee(employeeName);
+                memberVO.setTraceEmployee(traceEmployeeList);
             }
     }
 
@@ -122,7 +150,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     private void mapMemberDODTO(MemberDTO memberDTO, Member member) {
         BeanUtils.copyProperties(memberDTO, member, "headImg", "traceEmployee");
 
-        List<String> traceEmployee = Splitter.on(CommonConstants.SEPARATOR).splitToList(memberDTO.getTraceEmployee());
+        List<String> traceEmployee = memberDTO.getTraceEmployee();
 
         //存入跟踪员工
         if(!ComUtil.isEmpty(traceEmployee)){
@@ -143,7 +171,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         if(!ComUtil.isEmpty(memberDTO.getReferrerId())){
             Member byId = this.getById(memberDTO.getReferrerId());
             member.setReferrerId(byId.getId());
-            member.setName(byId.getName());
+            member.setReferreName(byId.getName());
         }
     }
 }
