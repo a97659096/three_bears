@@ -2,6 +2,7 @@ package com.quotorcloud.quotor.academy.api.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.io.Serializable;
@@ -28,102 +29,112 @@ public class InviteJob implements Serializable {
     /**
      * 唯一标识
      */
-    @TableId(value = "ij_id", type = IdType.UUID)
+    @TableId(value = "id", type = IdType.UUID)
     private String id;
 
     /**
      * 岗位名称
      */
-    private String ijPositionName;
+    private String positionId;
+
+    /**
+     * 岗位名称
+     */
+    private String positionName;
 
     /**
      * 联系电话
      */
-    private String ijPhone;
+    private String phone;
 
     /**
      * 福利
      */
-    private String ijWelfare;
+    private String welfare;
 
     /**
-     * 工资（日新）
+     * 工资（日新） 始值
      */
-    private String ijSalary;
+    private BigDecimal salaryStart;
+
+    /**
+     * 工资 终值
+     */
+    private BigDecimal salaryEnd;
 
     /**
      * 地址
      */
-    private String ijAddress;
+    private String address;
 
     /**
      * 所属店铺标识
      */
-    private String ijShopId;
+    private String shopId;
 
     /**
      * 所属店铺名称
      */
-    private String ijShopName;
+    private String shopName;
 
     /**
      * 招聘状态，1发布，2下架，3待发布
      */
-    private Integer ijStatus;
+    private Integer status;
 
     /**
      * 岗位详情
      */
-    private String ijPositionDetail;
+    private String positionDetail;
 
     /**
      * 个人详情
      */
-    private String ijOwnerDetail;
+    private String ownerDetail;
 
     /**
      * 开始日期
      */
-    private LocalDate ijStartDate;
+    private LocalDate startDate;
 
     /**
      * 结束日期
      */
-    private LocalDate ijEndDate;
+    private LocalDate endDate;
 
     /**
      * 发布时间
      */
-    private LocalDateTime ijIssueTime;
+    private LocalDateTime issueTime;
 
     /**
      * 类型，1招聘，2下店
      */
-    private Integer ijType;
+    private Integer type;
 
     /**
      * 下店人员标识
      */
-    private String ijXdrId;
+    private String xdrId;
 
     /**
      * 下店人员名称
      */
-    private String ijXdrName;
+    private String xdrName;
 
-    private Integer ijDelState;
+    private Integer delState;
 
     /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime ijGmtCreate;
+    private LocalDateTime GmtCreate;
 
     /**
      * 修改时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime ijGmtModified;
+    private LocalDateTime GmtModified;
 
 
 }
