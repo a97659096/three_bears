@@ -1,20 +1,23 @@
 package com.quotorcloud.quotor.academy.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import com.quotorcloud.quotor.academy.api.dto.*;
+import com.quotorcloud.quotor.academy.api.dto.AppointContent;
+import com.quotorcloud.quotor.academy.api.dto.AppointDTO;
+import com.quotorcloud.quotor.academy.api.dto.AppointEmployeeDTO;
+import com.quotorcloud.quotor.academy.api.dto.AppointProject;
 import com.quotorcloud.quotor.academy.api.entity.*;
 import com.quotorcloud.quotor.academy.api.vo.AppointVO;
-import com.quotorcloud.quotor.academy.mapper.*;
+import com.quotorcloud.quotor.academy.mapper.AppointMapper;
+import com.quotorcloud.quotor.academy.mapper.AppointRoomMapper;
+import com.quotorcloud.quotor.academy.mapper.EmployeeMapper;
+import com.quotorcloud.quotor.academy.mapper.MemberMapper;
 import com.quotorcloud.quotor.academy.service.AppointService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quotorcloud.quotor.academy.service.ConditionProService;
-import com.quotorcloud.quotor.academy.service.EmployeeService;
-import com.quotorcloud.quotor.academy.service.MemberService;
 import com.quotorcloud.quotor.academy.util.OrderUtil;
 import com.quotorcloud.quotor.academy.util.ShopSetterUtil;
 import com.quotorcloud.quotor.common.core.constant.CommonConstants;
@@ -81,9 +84,9 @@ public class AppointServiceImpl extends ServiceImpl<AppointMapper, Appoint> impl
     @Override
     public Boolean cancelAppoint(String id) {
         Appoint appoint = new Appoint();
-        appoint.setId(id);
+//        appoint.setAppointId(id);
         appoint.setAppointState(CommonConstants.APPOINT_LOSE_EFFICACY);
-        appointMapper.updateById(appoint);
+        appointMapper.update(appoint, new QueryWrapper<Appoint>().eq("appoint_id", id));
         return Boolean.TRUE;
     }
 
@@ -91,7 +94,7 @@ public class AppointServiceImpl extends ServiceImpl<AppointMapper, Appoint> impl
     public List<AppointEmployeeDTO> formAppoint(AppointVO appointVO) {
         shopSetterUtil.shopSetter(appointVO, appointVO.getShopId());
         //分页查询出预约信息
-        IPage<AppointVO> appointVOIPage = appointMapper.selectAppointPage(null, appointVO);
+        List<AppointVO> records = appointMapper.selectAppoint(appointVO);
         //获取员工信息
         List<AppointEmployeeDTO> employees = employeeMapper.selectAppointEmployee(appointVO.getShopId());
 
@@ -102,7 +105,7 @@ public class AppointServiceImpl extends ServiceImpl<AppointMapper, Appoint> impl
         Map<String, List<AppointDTO>> appointEmployeeMap = employees.stream()
                 .collect(Collectors.toMap(AppointEmployeeDTO::getEmployeeId, AppointEmployeeDTO::getAppoints));
         //获取结果集
-        List<AppointVO> records = appointVOIPage.getRecords();
+//        List<AppointVO> records = appointVOIPage.getRecords();
         //根据 appointId 分组
         Map<String, List<AppointVO>> listMap = records.stream().collect(Collectors.groupingBy(AppointVO::getAppointId));
         //遍历结果集，封装DTO返回给前端
@@ -117,7 +120,7 @@ public class AppointServiceImpl extends ServiceImpl<AppointMapper, Appoint> impl
                     appointEmployeeDTO.getAppoints().add(appointDTO);
                 }
                 //如果含有这个员工则把此条预约信息放到员工信息下边的预约集合里
-                if(!ComUtil.isEmpty(appointEmployeeMap.get(appointStaffId))){
+                if(!ComUtil.isEmpty(appointEmployeeMap.keySet().contains(appointStaffId))){
                     appointEmployeeMap.get(appointStaffId).add(appointDTO);
                 }
 
@@ -135,8 +138,8 @@ public class AppointServiceImpl extends ServiceImpl<AppointMapper, Appoint> impl
     public AppointDTO listAppointById(String id, String appointId) {
         AppointVO appointVO = new AppointVO();
         appointVO.setAppointId(appointId);
-        IPage<AppointVO> appointVOIPage = appointMapper.selectAppointPage(null, appointVO);
-        List<AppointVO> records = appointVOIPage.getRecords();
+        List<AppointVO> records = appointMapper.selectAppoint(appointVO);
+//        List<AppointVO> records = appointVOIPage.getRecords();
         Optional<AppointVO> optionalAppointVO = records.stream().filter(record -> record.getId().equals(id)).findFirst();
         return getAppointDTO(records, optionalAppointVO.get());
     }
@@ -237,11 +240,11 @@ public class AppointServiceImpl extends ServiceImpl<AppointMapper, Appoint> impl
         //遍历创建Appoint对象，进行批量插入
         for(AppointContent appointContent : appointContents){
             Appoint appoint = new Appoint();
+            BeanUtils.copyProperties(appointDTO, appoint);
             //为预约id赋值
             appoint.setAppointId(appointId);
             appoint.setOrderNumber(orderNumber);
             //映射DTO与DO
-            BeanUtils.copyProperties(appointDTO, appoint);
             appoint.setMemberId(memberId);
             appoint.setNewCustomer(newMemberState);
             //映射主要内容,注意要查询房间和服务人员名称并赋值
@@ -270,6 +273,7 @@ public class AppointServiceImpl extends ServiceImpl<AppointMapper, Appoint> impl
 
             //再用，隔开拼成字符串
             appoint.setProjects(Joiner.on(CommonConstants.SEPARATOR).join(itemList));
+            appoints.add(appoint);
         }
         return appoints;
     }

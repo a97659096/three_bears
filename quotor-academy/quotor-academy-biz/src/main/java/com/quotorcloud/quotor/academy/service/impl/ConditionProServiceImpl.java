@@ -155,10 +155,12 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
         shopSetterUtil.shopSetter(conditionPro, conditionProDTO.getShopId());
 
         //如果类别id不为空，查询出名称set进去
-        List<String> pCategoryIds = conditionProDTO.getPCategoryId();
+        List<String> pCategoryIds = conditionProDTO.getCategoryIds();
+        //新增的时候传的数组，我取他的最后一个
         if(!ComUtil.isEmpty(pCategoryIds)){
             ConditionCategory categoryServiceOne = conditionCategoryService.getOne(new QueryWrapper<ConditionCategory>().eq("c_id",
                     pCategoryIds.get(pCategoryIds.size()-1)));
+            conditionPro.setPCategoryId(pCategoryIds.get(pCategoryIds.size()-1));
             conditionPro.setPCategoryName(categoryServiceOne.getCName());
         }
         //图片文件夹名称
@@ -185,11 +187,10 @@ public class ConditionProServiceImpl extends ServiceImpl<ConditionProMapper, Con
     @Override
     public JSONObject listConditionPro(ConditionProDTO conditionProDTO) {
         Page<ConditionPro> page = PageUtil.getPage(conditionProDTO.getPageNo(), conditionProDTO.getPageSize());
-        List<String> pCategoryIds = conditionProDTO.getPCategoryId();
         //查父级跟着查出子级id集合再set进去
-        if(!ComUtil.isEmpty(pCategoryIds)){
+        if(!ComUtil.isEmpty(conditionProDTO.getPCategoryId())){
             //查询id集合
-            List<String> categoryIds = conditionCategoryService.findCategoryIds(pCategoryIds.get(pCategoryIds.size()-1));
+            List<String> categoryIds = conditionCategoryService.findCategoryIds(conditionProDTO.getPCategoryId());
             conditionProDTO.setCategoryIds(categoryIds);
         }
 

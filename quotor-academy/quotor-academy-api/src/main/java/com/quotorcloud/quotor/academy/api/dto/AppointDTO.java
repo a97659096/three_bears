@@ -31,7 +31,7 @@ public class AppointDTO {
     /**
      * 人数
      */
-    private String population;
+    private Integer population;
 
     /**
      * 预约日期

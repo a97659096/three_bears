@@ -138,8 +138,7 @@ public class ConditionCategoryServiceImpl extends ServiceImpl<ConditionCategoryM
     public List<String> findCategoryIds(String categoryId) {
         List<String> categoryIds = new LinkedList<>();
         List<ConditionCategory> conditionCategories = this
-                .list(new QueryWrapper<ConditionCategory>().eq("c_del_state", 0)
-                        .eq("c_type", CommonConstants.CONDITION_PROJECT));
+                .list(new QueryWrapper<ConditionCategory>().eq("c_del_state", 0));
 
         List<CategoryTree> treeNode = conditionCategories.stream().map(conditionCategory -> {
             CategoryTree categoryTree = new CategoryTree();

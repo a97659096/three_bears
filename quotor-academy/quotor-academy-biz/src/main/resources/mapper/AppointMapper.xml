@@ -52,7 +52,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, member_id, population, appoint_date, waste_book, new_customer, order_number, remark, appoint_state, shop_id, shop_name, appoint_staff_id, appoint_staff_name, start_time, end_time, projects, room_id, room_name, gmt_create, gmt_modified
+        a.id,a.appoint_id, a.member_id, a.population, a.appoint_date, a.waste_book, a.new_customer, a.order_number, a.remark, a.appoint_state, a.shop_id, a.shop_name, a.appoint_staff_id, a.appoint_staff_name, a.start_time, a.end_time, a.projects, a.room_id, a.room_name, a.gmt_create, a.gmt_modified
     </sql>
     <select id="selectAppointPage" resultType="com.quotorcloud.quotor.academy.api.vo.AppointVO">
         select
@@ -61,10 +61,25 @@
         from bear_appoint a left join bear_member m on a.member_id = m.id
         <where>
             <if test="appoint.shopId != null and appoint.shopId != ''">
-                and shop_id = #{appoint.shopId}
+                and a.shop_id = #{appoint.shopId}
             </if>
             <if test="appoint.appointId != null and appoint.appointId != ''">
-                and appoint_id = #{appoint.appointId}
+                and a.appoint_id = #{appoint.appointId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAppoint" resultType="com.quotorcloud.quotor.academy.api.vo.AppointVO">
+        select
+        m.name,m.number,m.phone,m.head_img,
+        <include refid="Base_Column_List"></include>
+        from bear_appoint a left join bear_member m on a.member_id = m.id
+        <where>
+            <if test="appoint.shopId != null and appoint.shopId != ''">
+                and a.shop_id = #{appoint.shopId}
+            </if>
+            <if test="appoint.appointId != null and appoint.appointId != ''">
+                and a.appoint_id = #{appoint.appointId}
             </if>
         </where>
     </select>
