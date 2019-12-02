@@ -19,8 +19,16 @@ public class ShopSetterUtil {
             if(ComUtil.isEmpty(user) || ComUtil.isEmpty(user.getDeptId())){
                 return;
             }
-            MethodUtil.setValue(o, o.getClass(), "shopId", String.class, String.valueOf(user.getDeptId()));
-            MethodUtil.setValue(o, o.getClass(), "shopName", String.class, user.getDeptName());
+            try {
+                if(!ComUtil.isEmpty(MethodUtil.getGetMethod(o, "shopId"))){
+                    MethodUtil.setValue(o, o.getClass(), "shopId", String.class, String.valueOf(user.getDeptId()));
+                }
+                if(!ComUtil.isEmpty(MethodUtil.getGetMethod(o, "shopName"))){
+                    MethodUtil.setValue(o, o.getClass(), "shopName", String.class, user.getDeptName());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -91,7 +91,7 @@ public class AppointServiceImpl extends ServiceImpl<AppointMapper, Appoint> impl
     public List<AppointEmployeeDTO> formAppoint(AppointVO appointVO) {
         shopSetterUtil.shopSetter(appointVO, appointVO.getShopId());
         //分页查询出预约信息
-        IPage<AppointVO> appointVOIPage = appointMapper.selectAppointPage(null, appointVO);
+        List<AppointVO> records = appointMapper.selectAppointForm(appointVO);
         //获取员工信息
         List<AppointEmployeeDTO> employees = employeeMapper.selectAppointEmployee(appointVO.getShopId());
 
@@ -101,8 +101,6 @@ public class AppointServiceImpl extends ServiceImpl<AppointMapper, Appoint> impl
 
         Map<String, List<AppointDTO>> appointEmployeeMap = employees.stream()
                 .collect(Collectors.toMap(AppointEmployeeDTO::getEmployeeId, AppointEmployeeDTO::getAppoints));
-        //获取结果集
-        List<AppointVO> records = appointVOIPage.getRecords();
         //根据 appointId 分组
         Map<String, List<AppointVO>> listMap = records.stream().collect(Collectors.groupingBy(AppointVO::getAppointId));
         //遍历结果集，封装DTO返回给前端

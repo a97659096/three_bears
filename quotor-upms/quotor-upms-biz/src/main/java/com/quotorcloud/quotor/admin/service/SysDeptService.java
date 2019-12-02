@@ -16,10 +16,14 @@
 
 package com.quotorcloud.quotor.admin.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.quotorcloud.quotor.admin.api.dto.DeptDTO;
 import com.quotorcloud.quotor.admin.api.dto.DeptTree;
 import com.quotorcloud.quotor.admin.api.entity.SysDept;
+import com.quotorcloud.quotor.admin.api.vo.DeptVO;
 
 import java.util.List;
 
@@ -34,41 +38,32 @@ import java.util.List;
 public interface SysDeptService extends IService<SysDept> {
 
 	/**
-	 * 查询部门树菜单
-	 *
-	 * @return 树
-	 */
-	List<DeptTree> listDeptTrees();
-
-	/**
-	 * 查询用户部门树
-	 *
+	 * 新增加盟商信息
+	 * @param deptDTO
 	 * @return
 	 */
-	List<DeptTree> listCurrentUserDeptTrees();
+	Boolean saveDept(DeptDTO deptDTO);
 
 	/**
-	 * 添加信息部门
-	 *
-	 * @param sysDept
+	 * 修改加盟商信息
+	 * @param deptDTO
 	 * @return
 	 */
-	Boolean saveDept(SysDept sysDept);
+	Boolean updateDept(DeptDTO deptDTO);
 
 	/**
-	 * 删除部门
-	 *
-	 * @param id 部门 ID
-	 * @return 成功、失败
+	 * 分页查询加盟商信息
+	 * @param page
+	 * @param deptDTO
+	 * @return
 	 */
-	Boolean removeDeptById(Integer id);
+	IPage<DeptVO> listDept(Page<SysDept> page, DeptDTO deptDTO);
 
 	/**
-	 * 更新部门
-	 *
-	 * @param sysDept 部门信息
-	 * @return 成功、失败
+	 * 根据id查询加盟商信息
+	 * @param id
+	 * @return
 	 */
-	Boolean updateDeptById(SysDept sysDept);
+	DeptVO listDeptById(Integer id);
 
 }

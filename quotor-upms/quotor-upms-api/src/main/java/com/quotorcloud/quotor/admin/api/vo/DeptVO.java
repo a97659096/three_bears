@@ -1,21 +1,21 @@
-package com.quotorcloud.quotor.admin.api.dto;
+package com.quotorcloud.quotor.admin.api.vo;
 
+
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
-public class DeptDTO {
+public class DeptVO {
 
     private Integer deptId;
 
     /**
      * 店铺头像
      */
-    private MultipartFile headImg;
-
-    private String headImgString;
+    private String headImg;
 
     /**
      * 店铺名称
@@ -32,12 +32,12 @@ public class DeptDTO {
      */
     private String intro;
 
+    private String environmentDatabase;
+
     /**
      * 店铺环境
      */
-    private MultipartFile[] environment;
-
-    private String environmentString;
+    private List<JSONObject> environment;
 
     /**
      * 店铺负责人
@@ -48,21 +48,4 @@ public class DeptDTO {
      * 店铺联系电话
      */
     private String phone;
-
-    /**
-     * 加入日期
-     */
-    private LocalDate joinDate;
-
-    /**
-     * 到期日期
-     */
-    private LocalDate expireDate;
-
-    /**
-     * 排序
-     */
-    private Integer sort;
-
-
 }

@@ -1,9 +1,12 @@
 package com.quotorcloud.quotor.academy.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.quotorcloud.quotor.academy.api.dto.InviteJobDTO;
 import com.quotorcloud.quotor.academy.api.entity.InviteJob;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.quotorcloud.quotor.academy.api.vo.InviteJobVO;
 
 import java.text.ParseException;
 
@@ -23,5 +26,9 @@ public interface InviteJobService extends IService<InviteJob> {
 
     Boolean removeInviteJob(String id);
 
-    JSONObject listInviteJob(InviteJobDTO inviteJobDTO) throws ParseException;
+    IPage<InviteJobVO> listInviteJob(Page<InviteJobVO> page,
+                        InviteJobDTO inviteJobDTO) throws ParseException;
+
+    InviteJobVO selectInviteJobById(Integer type, String id) throws ParseException;
+
 }

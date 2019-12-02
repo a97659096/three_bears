@@ -82,10 +82,17 @@ public class WeChatConfig {
     private String key;
 
     /**
-     * 微信支付回调url
+     * 预约课程微信支付回调url
      */
 //    @Value("${wxpay.callback}")
-    private String payCallbackUrl;
+    private String appointCoursePayCallbackUrl;
+
+    /**
+     * 预约讲师微信支付回调url
+     */
+//    @Value("${wxpay.callback}")
+    private String appointTeacherPayCallbackUrl;
+
 
     /**
      * 统一下单url
@@ -113,12 +120,20 @@ public class WeChatConfig {
         this.key = key;
     }
 
-    public String getPayCallbackUrl() {
-        return payCallbackUrl;
+    public String getAppointCoursePayCallbackUrl() {
+        return appointCoursePayCallbackUrl;
     }
 
-    public void setPayCallbackUrl(String payCallbackUrl) {
-        this.payCallbackUrl = payCallbackUrl;
+    public void setAppointCoursePayCallbackUrl(String appointCoursePayCallbackUrl) {
+        this.appointCoursePayCallbackUrl = appointCoursePayCallbackUrl;
+    }
+
+    public String getAppointTeacherPayCallbackUrl() {
+        return appointTeacherPayCallbackUrl;
+    }
+
+    public void setAppointTeacherPayCallbackUrl(String appointTeacherPayCallbackUrl) {
+        this.appointTeacherPayCallbackUrl = appointTeacherPayCallbackUrl;
     }
 
     public static String getOpenUserInfoUrl() {

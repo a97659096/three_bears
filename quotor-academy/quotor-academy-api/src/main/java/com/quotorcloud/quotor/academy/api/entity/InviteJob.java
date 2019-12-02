@@ -33,7 +33,7 @@ public class InviteJob implements Serializable {
     private String id;
 
     /**
-     * 岗位名称
+     * 岗位标识
      */
     private String positionId;
 
@@ -73,11 +73,6 @@ public class InviteJob implements Serializable {
     private String shopId;
 
     /**
-     * 所属店铺名称
-     */
-    private String shopName;
-
-    /**
      * 招聘状态，1发布，2下架，3待发布
      */
     private Integer status;
@@ -86,6 +81,16 @@ public class InviteJob implements Serializable {
      * 岗位详情
      */
     private String positionDetail;
+
+    /**
+     * 技能要求
+     */
+    private String skillRequire;
+
+    /**
+     * 技能特长
+     */
+    private String skillSuper;
 
     /**
      * 个人详情
@@ -108,7 +113,7 @@ public class InviteJob implements Serializable {
     private LocalDateTime issueTime;
 
     /**
-     * 类型，1招聘，2下店
+     * 类型，1招聘，求职
      */
     private Integer type;
 
@@ -122,6 +127,13 @@ public class InviteJob implements Serializable {
      */
     private String xdrName;
 
+    /**
+     * 图片
+     */
+    private String img;
+
+
+    @TableLogic
     private Integer delState;
 
     /**

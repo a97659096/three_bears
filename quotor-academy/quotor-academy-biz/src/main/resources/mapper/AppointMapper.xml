@@ -54,7 +54,7 @@
     <sql id="Base_Column_List">
         id, member_id, population, appoint_date, waste_book, new_customer, order_number, remark, appoint_state, shop_id, shop_name, appoint_staff_id, appoint_staff_name, start_time, end_time, projects, room_id, room_name, gmt_create, gmt_modified
     </sql>
-    <select id="selectAppointPage" resultType="com.quotorcloud.quotor.academy.api.vo.AppointVO">
+    <select id="selectAppointPage" resultType="com.quotorcloud.quotor.academy.api.vo.AppointVO" resultMap="BaseResultMapVO">
         select
         m.name,m.number,m.phone,m.head_img,
         <include refid="Base_Column_List"></include>
@@ -65,6 +65,26 @@
             </if>
             <if test="appoint.appointId != null and appoint.appointId != ''">
                 and appoint_id = #{appoint.appointId}
+            </if>
+            <if test="appoint.appointDate != null and appoint.appointDate != ''">
+                and appoint_date = #{appoint.appointDate}
+            </if>
+        </where>
+    </select>
+    <select id="selectAppointForm" resultType="com.quotorcloud.quotor.academy.api.vo.AppointVO" resultMap="BaseResultMapVO">
+        select
+        m.name,m.number,m.phone,m.head_img,
+        <include refid="Base_Column_List"></include>
+        from bear_appoint a left join bear_member m on a.member_id = m.id
+        <where>
+            <if test="appoint.shopId != null and appoint.shopId != ''">
+                and shop_id = #{appoint.shopId}
+            </if>
+            <if test="appoint.appointId != null and appoint.appointId != ''">
+                and appoint_id = #{appoint.appointId}
+            </if>
+            <if test="appoint.appointDate != null and appoint.appointDate != ''">
+                and appoint_date = #{appoint.appointDate}
             </if>
         </where>
     </select>

@@ -1,7 +1,9 @@
 package com.quotorcloud.quotor.academy.api.vo;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,57 +11,86 @@ import java.util.List;
 @Data
 public class InviteJobVO {
 
-    private String ijId;
+    private String id;
+
+    /**
+     * 岗位标识
+     */
+    private String positionId;
 
     /**
      * 岗位名称
      */
-    private String ijPositionName;
+    private String positionName;
 
     /**
      * 联系电话
      */
-    private String ijPhone;
+    private String phone;
 
     /**
      * 福利
      */
-    private String ijWelfare;
+    private String welfare;
 
     /**
-     * 工资（日新）
+     * 工资（日新） 始值
      */
-    private String ijSalary;
+    private BigDecimal salaryStart;
+
+    /**
+     * 工资 终值
+     */
+    private BigDecimal salaryEnd;
 
     /**
      * 地址
      */
-    private String ijAddress;
+    private String address;
 
     /**
      * 所属店铺标识
      */
-    private String ijShopId;
+    private String shopId;
 
     /**
-     * 所属店铺名称
+     * 店铺名称
      */
-    private String ijShopName;
+    private String shopName;
+
+    /**
+     * 店铺头像
+     */
+    private String shopHeadImg;
 
     /**
      * 招聘状态，1发布，2下架，3待发布
      */
-    private Integer ijStatus;
+    private Integer status;
 
     /**
      * 岗位详情
      */
-    private String ijPositionDetail;
+    private String positionDetail;
+
+    /**
+     * 技能要求
+     */
+    private String skillRequire;
+
+    /**
+     * 技能特长
+     */
+    private String skillSuper;
 
     /**
      * 个人详情
      */
-    private String ijOwnerDetail;
+    private String ownerDetail;
+
+    private LocalDate startDate;
+
+    private LocalDate endDate;
 
     /**
      * 开始结束日期
@@ -69,23 +100,27 @@ public class InviteJobVO {
     /**
      * 发布时间
      */
-    private LocalDateTime ijIssueTime;
+    private LocalDateTime issueTime;
 
     /**
      * 类型，1招聘，2下店
      */
-    private Integer ijType;
+    private Integer type;
 
     /**
      * 下店人员标识
      */
-    private String ijXdrId;
+    private String xdrId;
 
     /**
      * 下店人员名称
      */
-    private String ijXdrName;
+    private String xdrName;
 
-    private Integer ijDelState;
+    private String xdrHeadImg;
+
+    private String imgDatabase;
+
+    private List<JSONObject> img;
 
 }

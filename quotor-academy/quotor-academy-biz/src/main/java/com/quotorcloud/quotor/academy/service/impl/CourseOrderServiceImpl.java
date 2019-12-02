@@ -151,7 +151,7 @@ public class CourseOrderServiceImpl extends ServiceImpl<CourseOrderMapper, Cours
         params.put("out_trade_no",courseOrder.getOutTradeNo());
         params.put("total_fee",courseOrder.getTotalFee().toString());
         params.put("spbill_create_ip",courseOrder.getIp());
-        params.put("notify_url",weChatConfig.getPayCallbackUrl());
+        params.put("notify_url",weChatConfig.getAppointCoursePayCallbackUrl());
         //扫码支付
         if(type.equals(CommonConstants.NATIVE)){
             params.put("trade_type","NATIVE");
@@ -222,6 +222,7 @@ public class CourseOrderServiceImpl extends ServiceImpl<CourseOrderMapper, Cours
         courseOrder.setCourseId(courseOrderDTO.getCourseId());
         courseOrder.setPayState(CommonConstants.NOT_PAY);
         courseOrder.setDelState(CommonConstants.STATUS_NORMAL);
+        courseOrder.setOrderState(CommonConstants.WAIT_PAY);
         courseOrder.setOutTradeNo(GenerationSequenceUtil.generateUUID(null));
         //微信扫码支付
         courseOrder.setPayType(payType);

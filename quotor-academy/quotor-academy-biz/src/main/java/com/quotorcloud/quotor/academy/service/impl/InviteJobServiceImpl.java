@@ -11,10 +11,15 @@ import com.quotorcloud.quotor.academy.api.entity.InviteJob;
 import com.quotorcloud.quotor.academy.api.vo.InviteJobVO;
 import com.quotorcloud.quotor.academy.mapper.InviteJobMapper;
 import com.quotorcloud.quotor.academy.service.InviteJobService;
+import com.quotorcloud.quotor.academy.util.ShopSetterUtil;
 import com.quotorcloud.quotor.common.core.constant.CommonConstants;
+import com.quotorcloud.quotor.common.core.constant.FileConstants;
 import com.quotorcloud.quotor.common.core.util.ComUtil;
 import com.quotorcloud.quotor.common.core.util.DateTimeUtil;
+import com.quotorcloud.quotor.common.core.util.FileUtil;
 import com.quotorcloud.quotor.common.core.util.PageUtil;
+import com.quotorcloud.quotor.common.security.service.QuotorUser;
+import com.quotorcloud.quotor.common.security.util.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +45,8 @@ public class InviteJobServiceImpl extends ServiceImpl<InviteJobMapper, InviteJob
     @Override
     public Boolean saveInviteJob(InviteJobDTO inviteJobDTO) {
         InviteJob inviteJob = new InviteJob();
-        BeanUtils.copyProperties(inviteJobDTO, inviteJob, "rangeDate", "ijIssueTime");
+        BeanUtils.copyProperties(inviteJobDTO, inviteJob,
+                "rangeDate", "ijIssueTime", "img");
         //处理特殊字段
         manageSpecialField(inviteJobDTO, inviteJob);
         inviteJobMapper.insert(inviteJob);
@@ -50,7 +56,9 @@ public class InviteJobServiceImpl extends ServiceImpl<InviteJobMapper, InviteJob
     @Override
     public Boolean updateInviteJob(InviteJobDTO inviteJobDTO) {
         InviteJob inviteJob = new InviteJob();
-        BeanUtils.copyProperties(inviteJobDTO,inviteJob, "rangeDate", "ijIssueTime");
+        BeanUtils.copyProperties(inviteJobDTO,inviteJob, "rangeDate", "ijIssueTime", "img");
+        //是否有需要删除的字段去删除,调用之前写好的删除方法
+        FileUtil.removeFileAndField(inviteJob, inviteJobDTO, "img", FileConstants.FileType.FILE_INVITI_IMG_DIR);
         //处理特殊字段
         manageSpecialField(inviteJobDTO, inviteJob);
         inviteJobMapper.updateById(inviteJob);
@@ -61,18 +69,24 @@ public class InviteJobServiceImpl extends ServiceImpl<InviteJobMapper, InviteJob
     private void manageSpecialField(InviteJobDTO inviteJobDTO, InviteJob inviteJob) {
         List<String> stringDate = DateTimeUtil.getStringDate(inviteJobDTO.getDateRange());
         if(!ComUtil.isEmpty(stringDate)){
-            inviteJob.setIjStartDate(DateTimeUtil.stringToLocalDate(stringDate.get(0)));
-            inviteJob.setIjEndDate(DateTimeUtil.stringToLocalDate(stringDate.get(1)));
+            inviteJob.setStartDate(DateTimeUtil.stringToLocalDate(stringDate.get(0)));
+            inviteJob.setEndDate(DateTimeUtil.stringToLocalDate(stringDate.get(1)));
         }
-        if(inviteJobDTO.getIjStatus().equals(CommonConstants.ISSUE)){
-            inviteJob.setIjIssueTime(LocalDateTime.now());
+        if(inviteJobDTO.getStatus().equals(CommonConstants.ISSUE)){
+            inviteJob.setIssueTime(LocalDateTime.now());
         }
+        //存储图片
+        FileUtil.saveFileAndField(inviteJob, inviteJobDTO, "img", FileConstants.FileType.FILE_INVITI_IMG_DIR, null);
         //招聘，对店铺处理
-        if(!ComUtil.isEmpty(inviteJob.getIjType())) {
-            if (inviteJob.getIjType().equals(CommonConstants.INVITE)) {
-
-            } else if (inviteJob.getIjType().equals(CommonConstants.INN)) {
-
+        if(!ComUtil.isEmpty(inviteJob.getType())) {
+            //获取用户信息
+            QuotorUser user = SecurityUtils.getUser();
+            if (inviteJob.getType().equals(CommonConstants.INVITE)) {
+                //设置店铺标识
+                inviteJob.setShopId(String.valueOf(user.getDeptId()));
+            } else if (inviteJob.getType().equals(CommonConstants.INN)) {
+                //设置下单人标识
+                inviteJob.setXdrId(String.valueOf(user.getId()));
             }
         }
 
@@ -81,37 +95,74 @@ public class InviteJobServiceImpl extends ServiceImpl<InviteJobMapper, InviteJob
 
     @Override
     public Boolean removeInviteJob(String id) {
-        InviteJob inviteJob = new InviteJob();
-        inviteJob.setId(id);
-        inviteJob.setIjDelState(CommonConstants.STATUS_DEL);
-        inviteJobMapper.updateById(inviteJob);
+        inviteJobMapper.deleteById(id);
         return Boolean.TRUE;
     }
 
+    /**
+     * 查询招聘或求职列表
+     * @param page
+     * @param inviteJobDTO
+     * @return
+     * @throws ParseException
+     */
     @Override
-    public JSONObject listInviteJob(InviteJobDTO inviteJobDTO) throws ParseException {
-        //封装page
-        Page<InviteJob> page = PageUtil.getPage(inviteJobDTO.getPageNo(), inviteJobDTO.getPageSize());
-        //查询数据库
-        IPage<InviteJob> inviteJobIPage = inviteJobMapper.selectPage(page, new QueryWrapper<InviteJob>()
-                .eq("ijDelState", CommonConstants.STATUS_NORMAL)
-                .like(!ComUtil.isEmpty(inviteJobDTO.getIjPositionName()), "ijPositionName", inviteJobDTO.getIjPositionName())
-                .eq(!ComUtil.isEmpty(inviteJobDTO.getIjStatus()), "ijStatus", inviteJobDTO.getIjStatus())
-                .orderByDesc("ij_gmt_create"));
-        List<InviteJob> records = inviteJobIPage.getRecords();
-        List<InviteJobVO> inviteJobVOS = Lists.newArrayList();
-        //转换成VO
-        for (InviteJob record : records) {
-            InviteJobVO inviteJobVO = new InviteJobVO();
-            BeanUtils.copyProperties(record, inviteJobVO, "ijStartDate", "ijEndDate");
-            //对时间进行特殊处理转换成时间戳
-            String start = DateTimeUtil.dateToStamp(DateTimeUtil.localDateToString(record.getIjStartDate()));
-            String end = DateTimeUtil.dateToStamp(DateTimeUtil.localDateToString(record.getIjEndDate()));
-            //set进去
-            List<Long> dateRange = Lists.newArrayList(Long.valueOf(start), Long.valueOf(end));
-            inviteJobVO.setRangeDate(dateRange);
-            inviteJobVOS.add(inviteJobVO);
+    public IPage<InviteJobVO> listInviteJob(Page<InviteJobVO> page, InviteJobDTO inviteJobDTO) throws ParseException {
+        //如果不为空，则需要按时间范围进行查询，进行转换并赋值
+        if(!ComUtil.isEmpty(inviteJobDTO.getDateRange())){
+            List<String> stringDate = DateTimeUtil.getStringDate(inviteJobDTO.getDateRange());
+            inviteJobDTO.setStart(stringDate.get(0));
+            inviteJobDTO.setEnd(stringDate.get(1));
         }
-        return PageUtil.getPagePackage("inviteJobs", inviteJobVOS, page);
+        //查询数据库
+        IPage<InviteJobVO> inviteJobIPage;
+        //当类型为招聘时
+        if(inviteJobDTO.getType().equals(CommonConstants.INVITE)){
+            inviteJobIPage = inviteJobMapper.listInviteJob(page, inviteJobDTO);
+        //当类型为求职时
+        }else if(inviteJobDTO.getType().equals(CommonConstants.INN)){
+            inviteJobIPage = inviteJobMapper.listFindJob(page, inviteJobDTO);
+        }else {
+            return null;
+        }
+        //获取结果集
+        List<InviteJobVO> records = inviteJobIPage.getRecords();
+        //转换成VO
+        for (InviteJobVO record : records) {
+            mapVO(record);
+        }
+        return inviteJobIPage;
     }
+
+    private void mapVO(InviteJobVO record) throws ParseException {
+        //对时间进行特殊处理转换成时间戳
+        String start = DateTimeUtil.dateToStamp(DateTimeUtil.localDateToString(record.getStartDate()));
+        String end = DateTimeUtil.dateToStamp(DateTimeUtil.localDateToString(record.getEndDate()));
+        //set进去
+        List<Long> dateRange = Lists.newArrayList(Long.valueOf(start), Long.valueOf(end));
+        record.setRangeDate(dateRange);
+        record.setImg(FileUtil.getJsonObjects(record.getImgDatabase()));
+    }
+
+    /**
+     * 按id查询
+     * @param type
+     * @param id
+     * @return
+     * @throws ParseException
+     */
+    @Override
+    public InviteJobVO selectInviteJobById(Integer type, String id) throws ParseException {
+        InviteJobVO inviteJobVO;
+        if(type.equals(CommonConstants.INVITE)){
+            inviteJobVO = inviteJobMapper.selectInviteJobById(id);
+        }else if(type.equals(CommonConstants.INN)){
+            inviteJobVO = inviteJobMapper.selectFindJobById(id);
+        }else {
+            return null;
+        }
+        mapVO(inviteJobVO);
+        return inviteJobVO;
+    }
+
 }

@@ -17,12 +17,19 @@
 package com.quotorcloud.quotor.admin.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import com.quotorcloud.quotor.admin.api.dto.DeptDTO;
 import com.quotorcloud.quotor.admin.api.dto.DeptTree;
 import com.quotorcloud.quotor.admin.api.entity.SysDept;
 import com.quotorcloud.quotor.admin.api.entity.SysDeptRelation;
+import com.quotorcloud.quotor.admin.api.vo.DeptVO;
+import com.quotorcloud.quotor.common.core.constant.FileConstants;
+import com.quotorcloud.quotor.common.core.util.FileUtil;
 import com.quotorcloud.quotor.common.core.util.TreeUtil;
 import com.quotorcloud.quotor.admin.mapper.SysDeptMapper;
 import com.quotorcloud.quotor.admin.service.SysDeptRelationService;
@@ -30,6 +37,7 @@ import com.quotorcloud.quotor.admin.service.SysDeptService;
 import com.quotorcloud.quotor.common.security.util.SecurityUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,116 +56,72 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> implements SysDeptService {
 
-	private final SysDeptRelationService sysDeptRelationService;
+	@Autowired
+	private SysDeptMapper sysDeptMapper;
 
 	/**
-	 * 添加信息部门
-	 *
-	 * @param dept 部门
+	 * 插入加盟商信息
+	 * @param deptDTO
 	 * @return
 	 */
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public Boolean saveDept(SysDept dept) {
+	public Boolean saveDept(DeptDTO deptDTO) {
 		SysDept sysDept = new SysDept();
-		BeanUtils.copyProperties(dept, sysDept);
-		this.save(sysDept);
-		sysDeptRelationService.saveDeptRelation(sysDept);
+		//属性拷贝
+		BeanUtils.copyProperties(deptDTO, sysDept, "headImg", "environment");
+		//存入图片
+		FileUtil.saveFileAndField(sysDept, deptDTO, Lists.newArrayList("headImg", "environment"),
+				FileConstants.FileType.FILE_DEPT_IMG_DIR, null);
+		//插入操作
+		sysDeptMapper.insert(sysDept);
 		return Boolean.TRUE;
 	}
 
 	/**
-	 * 删除部门
-	 *
-	 * @param id 部门 ID
-	 * @return 成功、失败
+	 * 修改加盟商信息
+	 * @param deptDTO
+	 * @return
 	 */
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public Boolean removeDeptById(Integer id) {
-		//级联删除部门
-		List<Integer> idList = sysDeptRelationService
-			.list(Wrappers.<SysDeptRelation>query().lambda()
-				.eq(SysDeptRelation::getAncestor, id))
-			.stream()
-			.map(SysDeptRelation::getDescendant)
-			.collect(Collectors.toList());
+	public Boolean updateDept(DeptDTO deptDTO) {
+		//查询部门信息
+		SysDept sysDept = sysDeptMapper.selectById(deptDTO.getDeptId());
+		//属性拷贝
+		BeanUtils.copyProperties(deptDTO, sysDept,"headImg", "environment");
+		//删除需要删除的图片
+		FileUtil.removeFileAndField(sysDept, deptDTO,
+				Lists.newArrayList("headImg", "environment"), FileConstants.FileType.FILE_DEPT_IMG_DIR);
+		//新增需要新增的图片
+		FileUtil.saveFileAndField(sysDept, deptDTO, Lists.newArrayList("headImg", "environment"),
+				FileConstants.FileType.FILE_DEPT_IMG_DIR, null);
+		sysDeptMapper.updateById(sysDept);
+		return Boolean.TRUE;
+	}
 
-		if (CollUtil.isNotEmpty(idList)) {
-			this.removeByIds(idList);
+	/**
+	 * 分页查询加盟商信息
+	 * @param page
+	 * @param deptDTO
+	 * @return
+	 */
+	@Override
+	public IPage<DeptVO> listDept(Page<SysDept> page, DeptDTO deptDTO) {
+		IPage<DeptVO> deptVOS = sysDeptMapper.listDeptPage(page, deptDTO);
+		for (DeptVO deptVO : deptVOS.getRecords()){
+			deptVO.setEnvironment(FileUtil.getJsonObjects(deptVO.getEnvironmentDatabase()));
 		}
-
-		//删除部门级联关系
-		sysDeptRelationService.removeDeptRelationById(id);
-		return Boolean.TRUE;
+		return deptVOS;
 	}
 
 	/**
-	 * 更新部门
-	 *
-	 * @param sysDept 部门信息
-	 * @return 成功、失败
-	 */
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public Boolean updateDeptById(SysDept sysDept) {
-		//更新部门状态
-		this.updateById(sysDept);
-		//更新部门关系
-		SysDeptRelation relation = new SysDeptRelation();
-		relation.setAncestor(sysDept.getParentId());
-		relation.setDescendant(sysDept.getDeptId());
-		sysDeptRelationService.updateDeptRelation(relation);
-		return Boolean.TRUE;
-	}
-
-
-
-	/**
-	 * 查询全部部门树
-	 *
-	 * @return 树
-	 */
-	@Override
-	public List<DeptTree> listDeptTrees() {
-		return getDeptTree(this.list(Wrappers.emptyWrapper()));
-	}
-
-	/**
-	 * 查询用户部门树
-	 *
+	 * 按id查找加盟商信息
+	 * @param id
 	 * @return
 	 */
 	@Override
-	public List<DeptTree> listCurrentUserDeptTrees() {
-		Integer deptId = SecurityUtils.getUser().getDeptId();
-		List<Integer> descendantIdList = sysDeptRelationService
-			.list(Wrappers.<SysDeptRelation>query().lambda()
-				.eq(SysDeptRelation::getAncestor, deptId))
-			.stream().map(SysDeptRelation::getDescendant)
-			.collect(Collectors.toList());
-
-		List<SysDept> deptList = baseMapper.selectBatchIds(descendantIdList);
-		return getDeptTree(deptList);
+	public DeptVO listDeptById(Integer id) {
+		DeptVO deptVO = sysDeptMapper.selectDeptById(id);
+		deptVO.setEnvironment(FileUtil.getJsonObjects(deptVO.getEnvironmentDatabase()));
+		return deptVO;
 	}
-
-	/**
-	 * 构建部门树
-	 *
-	 * @param depts 部门
-	 * @return
-	 */
-	private List<DeptTree> getDeptTree(List<SysDept> depts) {
-		List<DeptTree> treeList = depts.stream()
-			.filter(dept -> !dept.getDeptId().equals(dept.getParentId()))
-			.map(dept -> {
-				DeptTree node = new DeptTree();
-				node.setId(String.valueOf(dept.getDeptId()));
-				node.setParentId(String.valueOf(dept.getParentId()));
-				node.setName(dept.getName());
-				return node;
-			}).collect(Collectors.toList());
-		return TreeUtil.buildByLoop(treeList, "0");
-	}
-
 }

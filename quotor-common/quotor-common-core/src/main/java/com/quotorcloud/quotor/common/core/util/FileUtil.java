@@ -1248,6 +1248,9 @@ public class FileUtil {
     }
 
     public static List<JSONObject> getJsonObjects(String value) {
+        if (ComUtil.isEmpty(value)){
+            return null;
+        }
         List<JSONObject> jsonObjects = new ArrayList<>();
         Splitter.on(CommonConstants.SEPARATOR).trimResults().splitToList(value)
                 .forEach(envi -> {

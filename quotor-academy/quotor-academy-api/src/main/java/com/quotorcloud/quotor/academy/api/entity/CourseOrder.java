@@ -62,6 +62,11 @@ public class CourseOrder implements Serializable {
     private LocalDateTime notifyTime;
 
     /**
+     * 订单状态，1已完成，2待付款，3待评价，4已关闭
+     */
+    private Integer orderState;
+
+    /**
      * 金额
      */
     private Integer totalFee;

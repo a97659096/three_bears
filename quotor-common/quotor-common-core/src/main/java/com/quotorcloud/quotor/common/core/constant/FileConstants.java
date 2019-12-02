@@ -73,6 +73,10 @@ public class FileConstants {
         public static final String FILE_USER_IMG_DIR = "/sys/user/";
         public static final String FILE_ICON_IMG_DIR = "/sys/icon/";
         public static final String FILE_MENU_IMG_DIR = "/sys/menu/";
+        public static final String FILE_DEPT_IMG_DIR = "/sys/dept/";
+        public static final String FILE_INVITI_IMG_DIR = "/invite/";
+        public static final String FILE_INN_IMG_DIR = "/inn/";
+        public static final String FILE_MEMBER_LOG_IMG_DIR = "/member/log/";
         public static final String FILE_EXPEND_IMG_DIR = "/expend/";
         public static final String FILE_BANNER_IMG_DIR = "/banner/";
         public static final String FILE_MEMBER_IMG_DIR = "/member/";

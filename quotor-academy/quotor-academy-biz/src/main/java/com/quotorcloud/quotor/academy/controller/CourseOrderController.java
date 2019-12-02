@@ -13,6 +13,7 @@ import com.quotorcloud.quotor.academy.api.entity.CourseOrder;
 import com.quotorcloud.quotor.academy.service.CourseOrderService;
 import com.quotorcloud.quotor.academy.service.CourseService;
 import com.quotorcloud.quotor.academy.service.TeacherService;
+import com.quotorcloud.quotor.academy.util.OrderUtil;
 import com.quotorcloud.quotor.common.core.util.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,8 +46,11 @@ public class CourseOrderController {
     @Autowired
     private TeacherService teacherService;
 
+    @Autowired
+    private OrderUtil orderUtil;
+
     //保存订单生成二维码返回，native扫码支付
-    @GetMapping("/native/save")
+    @PostMapping("/native/save")
     public void saveCourseOrder(CourseOrderDTO courseOrderDTO,
                                 HttpServletRequest request, HttpServletResponse response){
 
@@ -56,23 +60,8 @@ public class CourseOrderController {
             throw new  NullPointerException();
         }
 
-        //将codeurl生成二维码
-        try{
-            //生成二维码配置
-            Map<EncodeHintType,Object> hints =  new HashMap<>();
-            //设置纠错等级
-            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-            //编码类型
-            hints.put(EncodeHintType.CHARACTER_SET,"UTF-8");
+        orderUtil.genertorQRCode(codeUrl, response);
 
-            BitMatrix bitMatrix = new MultiFormatWriter().encode(codeUrl, BarcodeFormat.QR_CODE,400,400,hints);
-            OutputStream out =  response.getOutputStream();
-
-            MatrixToImageWriter.writeToStream(bitMatrix,"png",out);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     @GetMapping("/jsapi/save")

@@ -17,7 +17,12 @@
 package com.quotorcloud.quotor.admin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.quotorcloud.quotor.admin.api.dto.DeptDTO;
 import com.quotorcloud.quotor.admin.api.entity.SysDept;
+import com.quotorcloud.quotor.admin.api.vo.DeptVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -37,4 +42,8 @@ public interface SysDeptMapper extends BaseMapper<SysDept> {
 	 * @return 数据列表
 	 */
 	List<SysDept> listDepts();
+
+	IPage<DeptVO> listDeptPage(Page<SysDept> page, @Param("dept") DeptDTO deptDTO);
+
+	DeptVO selectDeptById(@Param("id") Integer id);
 }
