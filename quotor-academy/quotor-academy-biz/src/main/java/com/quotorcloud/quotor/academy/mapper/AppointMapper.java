@@ -21,6 +21,5 @@ public interface AppointMapper extends BaseMapper<Appoint> {
 
     IPage<AppointVO> selectAppointPage(Page<AppointVO> page,
                                        @Param("appoint") AppointVO appointVO);
-
-    List<AppointVO> selectAppointForm(@Param("appoint") AppointVO appointVO);
+    List<AppointVO> selectAppoint(@Param("appoint") AppointVO appointVO);
 }
