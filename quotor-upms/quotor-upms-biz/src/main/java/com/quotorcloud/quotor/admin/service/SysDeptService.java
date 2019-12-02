@@ -17,6 +17,7 @@
 package com.quotorcloud.quotor.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.quotorcloud.quotor.admin.api.dto.DeptDTO;
 import com.quotorcloud.quotor.admin.api.dto.DeptTree;
 import com.quotorcloud.quotor.admin.api.entity.SysDept;
 

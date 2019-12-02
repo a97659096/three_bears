@@ -24,6 +24,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -42,11 +43,52 @@ public class SysDept extends Model<SysDept> {
 
 	@TableId(value = "dept_id", type = IdType.AUTO)
 	private Integer deptId;
+
 	/**
-	 * 部门名称
+	 * 店铺头像
 	 */
-	@NotBlank(message = "部门名称不能为空")
+	private String headImg;
+
+	/**
+	 * 店铺名称
+	 */
+	@NotBlank(message = "店铺名称不能为空")
 	private String name;
+
+	/**
+	 * 店铺编号
+	 */
+	private String number;
+
+	/**
+	 *店铺简介
+	 */
+	private String intro;
+
+	/**
+	 * 店铺环境
+	 */
+	private String environment;
+
+	/**
+	 * 店铺负责人
+	 */
+	private String manager;
+
+	/**
+	 * 店铺联系电话
+	 */
+	private String phone;
+
+	/**
+	 * 加入日期
+	 */
+	private LocalDate joinDate;
+
+	/**
+	 * 到期日期
+	 */
+	private LocalDate expireDate;
 
 	/**
 	 * 排序

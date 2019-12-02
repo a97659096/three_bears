@@ -19,6 +19,7 @@ package com.quotorcloud.quotor.admin.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.quotorcloud.quotor.admin.api.dto.DeptDTO;
 import com.quotorcloud.quotor.admin.api.dto.DeptTree;
 import com.quotorcloud.quotor.admin.api.entity.SysDept;
 import com.quotorcloud.quotor.admin.api.entity.SysDeptRelation;
@@ -110,6 +111,8 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 		return Boolean.TRUE;
 	}
 
+
+
 	/**
 	 * 查询全部部门树
 	 *
@@ -156,4 +159,5 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 			}).collect(Collectors.toList());
 		return TreeUtil.buildByLoop(treeList, "0");
 	}
+
 }
