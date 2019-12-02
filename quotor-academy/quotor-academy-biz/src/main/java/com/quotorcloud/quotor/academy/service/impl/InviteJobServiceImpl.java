@@ -65,7 +65,6 @@ public class InviteJobServiceImpl extends ServiceImpl<InviteJobMapper, InviteJob
         return Boolean.TRUE;
     }
 
-    //TODO 店铺和下店人
     private void manageSpecialField(InviteJobDTO inviteJobDTO, InviteJob inviteJob) {
         List<String> stringDate = DateTimeUtil.getStringDate(inviteJobDTO.getDateRange());
         if(!ComUtil.isEmpty(stringDate)){
@@ -89,9 +88,7 @@ public class InviteJobServiceImpl extends ServiceImpl<InviteJobMapper, InviteJob
                 inviteJob.setXdrId(String.valueOf(user.getId()));
             }
         }
-
     }
-
 
     @Override
     public Boolean removeInviteJob(String id) {
