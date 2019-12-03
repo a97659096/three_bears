@@ -8,6 +8,7 @@ import com.quotorcloud.quotor.academy.api.entity.InnTeacher;
 import com.quotorcloud.quotor.academy.mapper.InnTeacherMapper;
 import com.quotorcloud.quotor.academy.service.InnTeacherService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.quotorcloud.quotor.common.core.constant.CommonConstants;
 import com.quotorcloud.quotor.common.core.constant.FileConstants;
 import com.quotorcloud.quotor.common.core.util.FileUtil;
 import org.springframework.beans.BeanUtils;
@@ -31,6 +32,7 @@ public class InnTeacherServiceImpl extends ServiceImpl<InnTeacherMapper, InnTeac
     @Override
     public Boolean saveInnTeacher(InnTeacherDTO innTeacherDTO) {
         InnTeacher innTeacher = new InnTeacher();
+        innTeacher.setDelState(CommonConstants.STATUS_NORMAL);
         BeanUtils.copyProperties(innTeacherDTO, innTeacher);
         FileUtil.saveFileAndField(innTeacher, innTeacherDTO, "headImg", FileConstants.FileType.FILE_INN_IMG_DIR, null);
         innTeacherMapper.insert(innTeacher);
