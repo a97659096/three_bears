@@ -38,7 +38,11 @@
         <result column="remark" property="remark" />
         <result column="out_trade_no" property="outTradeNo" />
         <result column="total_fee" property="totalFee" />
+        <result column="notify_time" property="notifyTime"/>
+        <result column="pay_state" property="payState"/>
+        <result column="pay_type" property="payType"/>
         <result column="inn_teacher_id" property="innTeacherId" />
+        <result column="inn_teacher_salary" property="innTeacherSalary" />
         <result column="inn_teacher_name" property="innTeacherName"/>
         <result column="ip" property="ip" />
         <result column="pay_time" property="payTime"/>
@@ -49,8 +53,10 @@
         id, open_id, user_id, shop_id, shop_name, start_date, end_date, remark, out_trade_no, total_fee, pay_state, pay_time, notify_time, order_state, pay_type, inn_teacher_id, inn_teacher_name, ip, del_state, gmt_create, gmt_modified
     </sql>
     <sql id="Base_Column_List_Appoint_vo">
-        ito.id, ito.open_id, ito.shop_id, ito.user_id, dept.shop_name, dept.head_img, ito.start_date, ito.end_date, ito.remark,
-        ito.out_trade_no, ito.total_fee, ito.inn_teacher_id, ito.inn_teacher_name, ito.ip, ito.pay_time
+        ito.id, ito.open_id, ito.shop_id, ito.user_id, dept.shop_name, dept.head_img, ito.start_date,
+        ito.end_date, ito.remark,
+        ito.out_trade_no, ito.total_fee, ito.notify_time, ito.pay_state, ito.pay_type,
+        ito.inn_teacher_id,ito.inn_teacher_salary, ito.inn_teacher_name, ito.ip, ito.pay_time
     </sql>
     <select id="listAppointTeacherPage" resultType="com.quotorcloud.quotor.academy.api.vo.InnTeacherAppointVO"
             resultMap="BaseResultMapAppointVO">
@@ -73,6 +79,9 @@
             </if>
             <if test="inn.userId != null and inn.userId != ''">
                 ito.user_id = #{inn.userId}
+            </if>
+            <if test="inn.payState != null and inn.payState != ''">
+                ito.pay_state = #{inn.payState}
             </if>
         </where>
     </select>

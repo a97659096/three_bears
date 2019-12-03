@@ -37,15 +37,21 @@ public class EmployeeSchedu implements Serializable {
      */
     private String esEmployeeId;
 
+    private String esEmployeeName;
+
     /**
      * 排班日期
      */
-    private LocalDate esDate;
+    private LocalDate esStartDate;
+
+    private LocalDate esEndDate;
 
     /**
      * 排班所属班次标识
      */
     private String esClassId;
+
+    private String esShopId;
 
     /**
      * 创建时间

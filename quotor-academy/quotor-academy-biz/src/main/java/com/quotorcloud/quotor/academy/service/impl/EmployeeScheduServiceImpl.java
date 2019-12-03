@@ -1,11 +1,17 @@
 package com.quotorcloud.quotor.academy.service.impl;
 
+import com.quotorcloud.quotor.academy.api.entity.Employee;
 import com.quotorcloud.quotor.academy.api.entity.EmployeeSchedu;
+import com.quotorcloud.quotor.academy.api.vo.EmployeeScheduVO;
+import com.quotorcloud.quotor.academy.mapper.EmployeeMapper;
 import com.quotorcloud.quotor.academy.mapper.EmployeeScheduMapper;
 import com.quotorcloud.quotor.academy.service.EmployeeScheduService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.quotorcloud.quotor.academy.util.ShopSetterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -21,10 +27,25 @@ public class EmployeeScheduServiceImpl extends ServiceImpl<EmployeeScheduMapper,
     @Autowired
     private EmployeeScheduMapper employeeScheduMapper;
 
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
+    @Autowired
+    private ShopSetterUtil shopSetterUtil;
+
     @Override
     public Boolean saveEmployeeSchedu(EmployeeSchedu employeeSchedu) {
+        setEmployeeName(employeeSchedu);
         employeeScheduMapper.insert(employeeSchedu);
         return Boolean.TRUE;
+    }
+
+    private void setEmployeeName(EmployeeSchedu employeeSchedu) {
+        shopSetterUtil.shopSetter(employeeSchedu, employeeSchedu.getEsShopId());
+        //根据员工id查询到员工信息
+        Employee employee = employeeMapper.selectById(employeeSchedu.getEsEmployeeId());
+        //将员工姓名set进去
+        employeeSchedu.setEsEmployeeName(employee.getName());
     }
 
     @Override
@@ -35,7 +56,13 @@ public class EmployeeScheduServiceImpl extends ServiceImpl<EmployeeScheduMapper,
 
     @Override
     public Boolean updateEmployeeSchedu(EmployeeSchedu employeeSchedu) {
+        setEmployeeName(employeeSchedu);
         employeeScheduMapper.updateById(employeeSchedu);
         return Boolean.TRUE;
+    }
+
+    @Override
+    public List<EmployeeScheduVO> selectEmployeeSchedu(String shopId) {
+        return employeeScheduMapper.selectEmployeeScheduVO(shopId);
     }
 }

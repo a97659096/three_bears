@@ -49,4 +49,8 @@ public class InnTeacherController {
         return R.ok(innTeacherService.removeInnTeacher(id));
     }
 
+    @GetMapping("listbox")
+    public R listBoxInnTeacher(){
+        return R.ok(innTeacherService.list());
+    }
 }

@@ -21,7 +21,8 @@ import java.util.List;
  **/
 public class CodeGenerator {
 
-    private static final String[] TABLES_NAME = {"bear_course_chapter"};
+    private static final String[] TABLES_NAME = {"bear_message_category",
+            "bear_message_template"};
 
     public static void main(String[] args) {
         String[] models = {"quotor-academy-api","quotor-academy"};
