@@ -83,6 +83,9 @@
             <if test="inn.payState != null and inn.payState != ''">
                 ito.pay_state = #{inn.payState}
             </if>
+            <if test="inn.innTeacherName != null and inn.innTeacherName != ''">
+                ito.inn_teacher_name like concat('%',#{inn.innTeacherName},'%')
+            </if>
         </where>
     </select>
 
