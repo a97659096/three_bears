@@ -37,7 +37,6 @@ public class Appoint implements Serializable {
      */
     private String appointId;
 
-
     /**
      * 预约人标识
      */

@@ -20,10 +20,10 @@ public class ShopSetterUtil {
                 return;
             }
             try {
-                if(!ComUtil.isEmpty(MethodUtil.getGetMethod(o, "shopId"))){
+                if(!ComUtil.isEmpty(o.getClass().getField("shopId"))){
                     MethodUtil.setValue(o, o.getClass(), "shopId", String.class, String.valueOf(user.getDeptId()));
                 }
-                if(!ComUtil.isEmpty(MethodUtil.getGetMethod(o, "shopName"))){
+                if(!ComUtil.isEmpty(o.getClass().getField("shopName"))){
                     MethodUtil.setValue(o, o.getClass(), "shopName", String.class, user.getDeptName());
                 }
             } catch (Exception e) {

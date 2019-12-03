@@ -6,6 +6,8 @@ import com.quotorcloud.quotor.academy.api.dto.InnTeacherDTO;
 import com.quotorcloud.quotor.academy.api.entity.InnTeacher;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 下店老师信息表 服务类
@@ -25,4 +27,5 @@ public interface InnTeacherService extends IService<InnTeacher> {
     IPage<InnTeacher> listInnTeacher(Page<InnTeacher> page, InnTeacherDTO innTeacherDTO);
 
     InnTeacher selectInnTeacherById(String id);
+
 }

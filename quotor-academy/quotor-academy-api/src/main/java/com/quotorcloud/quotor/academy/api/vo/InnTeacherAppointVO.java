@@ -29,11 +29,26 @@ public class InnTeacherAppointVO {
 
     private BigDecimal totalFee;
 
+    /**
+     * 支付回调时间
+     */
+    private LocalDateTime notifyTime;
+
+    /**
+     * 支付状态，1成功，2未支付
+     */
+    private Integer payState;
+
+    /**
+     * 支付类型：1微信扫码，2支付宝扫码，3小程序
+     */
+    private Integer payType;
+
     private String innTeacherId;
 
+    private BigDecimal innTeacherSalary;
+
     private String innTeacherName;
-
-
 
     private String ip;
 

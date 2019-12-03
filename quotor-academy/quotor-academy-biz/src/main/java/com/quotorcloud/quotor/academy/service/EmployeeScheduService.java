@@ -2,6 +2,9 @@ package com.quotorcloud.quotor.academy.service;
 
 import com.quotorcloud.quotor.academy.api.entity.EmployeeSchedu;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.quotorcloud.quotor.academy.api.vo.EmployeeScheduVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -18,4 +21,6 @@ public interface EmployeeScheduService extends IService<EmployeeSchedu> {
     Boolean removeEmployeeSchedu(String id);
 
     Boolean updateEmployeeSchedu(EmployeeSchedu employeeSchedu);
+
+    List<EmployeeScheduVO> selectEmployeeSchedu(String shopId);
 }

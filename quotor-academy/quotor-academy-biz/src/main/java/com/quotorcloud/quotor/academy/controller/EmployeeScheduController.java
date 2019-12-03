@@ -36,4 +36,9 @@ public class EmployeeScheduController {
     public R updateEmployeeSchedu(@RequestBody EmployeeSchedu employeeSchedu){
         return R.ok(employeeScheduService.updateEmployeeSchedu(employeeSchedu));
     }
+
+    @GetMapping("list")
+    public R listEmployeeSchedu(String shopId){
+        return R.ok(employeeScheduService.selectEmployeeSchedu(shopId));
+    }
 }
