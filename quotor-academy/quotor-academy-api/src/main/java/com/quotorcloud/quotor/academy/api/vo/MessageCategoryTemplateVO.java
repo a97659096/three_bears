@@ -1,9 +1,7 @@
 package com.quotorcloud.quotor.academy.api.vo;
 
-import com.quotorcloud.quotor.academy.api.entity.MessageTemplate;
 import lombok.Data;
 
-import java.util.List;
 
 @Data
 public class MessageCategoryTemplateVO {
@@ -25,6 +23,6 @@ public class MessageCategoryTemplateVO {
      */
     private Integer categoryType;
 
-    private List<MessageTemplate> messageTemplates;
+//    private List<MessageTemplate> messageTemplates;
 
 }
