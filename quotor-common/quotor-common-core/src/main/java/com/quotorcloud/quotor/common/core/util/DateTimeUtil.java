@@ -1732,6 +1732,100 @@ public class DateTimeUtil {
     //----------------------------------------------------------------------/
     //----------------------------------------------------------------------/
 
+    //获取指定月份所有日期集合
+    public static List<String> getMonthEveryDayList(String date) {
+
+        List<String> dayList = new ArrayList<>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+        Date s = null;
+        try {
+            s = simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int year = Integer.parseInt(String.format("%tY", s));
+        int month = Integer.parseInt(String.format("%tm", s));
+        int day = 0;
+
+        int[] monDays = new int[] {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        if ( ( (year) % 4 == 0 && (year) % 100 != 0) ||(year) % 400 == 0) {
+            day = monDays[month]++;
+        } else {
+            day = monDays[month];
+        }
+
+        for (int i = 1; i <= day; i++) {
+            String rq = year+"-"+(month)+"-"+i;
+            dayList.add(rq);
+        }
+
+        return dayList;
+    }
+
+    //根据日期获取星期几
+    public static String weekByDate (String date)
+    {
+        String str="";
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date d = null;
+        try {
+            d = fmt.parse(date);
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(d);
+
+        int weekDay = cal.get(Calendar.DAY_OF_WEEK);
+
+        switch(weekDay) {
+            case 1 : str="星期日"; break;
+            case 2 : str="星期一"; break;
+            case 3 : str="星期二"; break;
+            case 4 : str="星期三"; break;
+            case 5 : str="星期四"; break;
+            case 6 : str="星期五"; break;
+            case 7 : str="星期六"; break;
+            default: break;
+        }
+        return str;
+    }
+
+    //根据日期获取星期几
+    public static Integer weekIntegerByDate (String date)
+    {
+        Integer str = null;
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date d = null;
+        try {
+            d = fmt.parse(date);
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(d);
+
+        int weekDay = cal.get(Calendar.DAY_OF_WEEK);
+
+        switch(weekDay) {
+            case 1 : str=7; break;
+            case 2 : str=1; break;
+            case 3 : str=2; break;
+            case 4 : str=3; break;
+            case 5 : str=4; break;
+            case 6 : str=5; break;
+            case 7 : str=6; break;
+            default: break;
+        }
+        return str;
+    }
+
     /**
      * 通过反射对时间戳做出处理，并赋值到start和end字段
      * @param clazz

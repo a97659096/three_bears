@@ -191,6 +191,12 @@ public class Employee implements Serializable {
     private String remark;
 
     /**
+     * 用户标识
+     */
+    @TableField(value = "e_user_id")
+    private String userId;
+
+    /**
      * 创建时间
      */
     @TableField(value = "e_gmt_create", fill = FieldFill.INSERT)

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quotorcloud.quotor.academy.mapper.MessageTemplateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quotorcloud.quotor.academy.api.entity.MessageTemplate">
+        <id column="template_id" property="templateId" />
+        <result column="template_category_id" property="templateCategoryId" />
+        <result column="template_content" property="templateContent" />
+        <result column="template_type" property="templateType" />
+        <result column="template_shop_id" property="templateShopId" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <resultMap id="BaseResultMapVO" type="com.quotorcloud.quotor.academy.api.vo.MessageCategoryTemplateVO">
+        <id column="category_id" property="categoryId" />
+        <result column="category_name" property="categoryName"/>
+        <result column="category_type" property="categoryType" />
+        <result column="category_shop_id" property="categoryShopId" />
+        <collection column="message_templates" property="messageTemplates" resultMap="BaseResultMap"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List_Template">
+        template_id, template_category_id, template_content, template_type, template_shop_id
+    </sql>
+    <sql id="Base_Column_List_Category">
+        category_id, category_name, category_type, category_shop_id
+    </sql>
+    <select id="listMessageCategoryTemplateByShopId"
+            resultType="com.quotorcloud.quotor.academy.api.vo.MessageCategoryTemplateVO" resultMap="BaseResultMapVO">
+        select
+        <include refid="Base_Column_List_Category"></include>,
+        <include refid="Base_Column_List_Template"></include>
+        from bear_message_category mc left join bear_message_template mt on mc.category_id = template_category_id
+        where mc.del_state = 0 and mt.del_state = 0 and
+        (category_type = 1 or (category_shop_id = #{shopId} and category_type = 2))
+        and (template_type = 1 or (template_shop_id = #{shopId}) and template_type = 2)
+    </select>
+
+</mapper>

@@ -21,8 +21,7 @@ import java.util.List;
  **/
 public class CodeGenerator {
 
-    private static final String[] TABLES_NAME = {"bear_message_category",
-            "bear_message_template"};
+    private static final String[] TABLES_NAME = {"bear_employee_attendance_rule"};
 
     public static void main(String[] args) {
         String[] models = {"quotor-academy-api","quotor-academy"};
@@ -56,6 +55,7 @@ public class CodeGenerator {
         gc.setOpen(false);
         gc.setBaseResultMap(true);
         gc.setEnableCache(false);
+        gc.setFileOverride(true);
         gc.setBaseColumnList(true);
         mpg.setGlobalConfig(gc);
 
@@ -125,7 +125,7 @@ public class CodeGenerator {
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setTablePrefix("bear_");
-//        strategy.setFieldPrefix("e_");
+        strategy.setFieldPrefix("ear_");
 //        strategy.setSuperEntityClass("com.serve.ops.data.BaseEntity");
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);

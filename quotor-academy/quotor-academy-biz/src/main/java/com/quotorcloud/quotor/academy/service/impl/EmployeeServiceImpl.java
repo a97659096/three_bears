@@ -223,7 +223,6 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     private Employee mapEmployeeDTOToDO(EmployeeDTO employeeDTO, Employee employee){
         //映射
         BeanUtils.copyProperties(employeeDTO, employee, "eWorks", "eHeadImg", "joinDate");
-
         //设置店铺信息
         QuotorUser user = SecurityUtils.getUser();
         if(ComUtil.isEmpty(user)){

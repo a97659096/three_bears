@@ -138,6 +138,8 @@ public class EmployeeDTO {
      */
     private Integer subscribe;
 
+    private String userId;
+
     /**
      * 预约排序
      */
